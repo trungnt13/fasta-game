@@ -1,0 +1,86 @@
+{
+  "DefParams": [
+    {
+      "Type": "Texture",
+      "Params": {
+        "genMipMaps": false,
+        "minFilter": "Linear",
+        "magFilter": "Linear",
+        "wrapU": "ClampToEdge",
+        "wrapV": "ClampToEdge"
+      }
+    },
+    {
+      "Type": "TextureAtlas",
+      "Params": {
+        "flip": false
+      }
+    },
+    {
+      "Type": "BitmapFont",
+      "Params": {
+        "flip": false,
+        "minFilter": "Nearest",
+        "maxFilter": "Nearest"
+      }
+    }
+  ],
+  "Packs": [
+    {
+      "Screen": "SpriteSpineTestScreen",
+      "Priority": 10,
+      "Data": [
+        {
+          "File": [
+            "data/spineboy.json"
+          ],
+          "Type": "Spine"
+        }
+      ]
+    },
+    {
+      "Screen": "SpriterTestScreen",
+      "Priority": 10,
+      "Data": [
+        {
+          "File": [
+            "data/zombie.png",
+            "data/zombiedie.png"
+          ],
+          "Type": "Texture"
+        }
+      ]
+    },
+    {
+      "Screen": "SpriteBoxTestScreen",
+      "Priority": 10,
+      "Data": [
+        {
+          "File": [
+            "data/firearrow.png"
+          ],
+          "Type": "Texture"
+        }
+      ]
+    },
+    {
+      "Screen": "SpriteParticleScreen",
+      "Priority": 10,
+      "Data": [
+        {
+          "File": [
+            "data/particle_ice"
+          ],
+          "Type": "ParticleEffect"
+        },
+        {
+          "File":[
+            "data/ice.png",
+            "data/background.jpg"
+          ],
+          "Type": "Texture"
+        }
+      ]
+    }
+  ]
+}

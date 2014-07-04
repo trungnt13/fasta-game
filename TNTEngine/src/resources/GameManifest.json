@@ -1,0 +1,44 @@
+{
+	"OpenGL20": true,
+	"RGBA":"5650",
+	"Depth":16,
+	"Stencil":0,
+	"Accelerometer":false,
+	"Compass":false,
+	"Wakelock":true,
+	"Screen":[
+		"com.topvn.pairthezombie.screen.FirstScreen",
+		"com.topvn.pairthezombie.screen.SecondScreen",
+		"com.topvn.pairthezombie.screen.GamePlayScreen",
+		"com.topvn.pairthezombie.screen.PopScreen",
+		"com.topvn.pairthezombie.screen.GameLoadScreen"
+	],
+	"Core":"com.topvn.pairthezombie.PTZGameCore",
+	"FirstScreen":"com.topvn.pairthezombie.screen.FirstScreen",
+	"Resources":[
+		"data/resources.json"
+	],
+	"ResourceType":{
+		"com.badlogic.gdx.audio.Sound": "com.badlogic.gdx.assets.loaders.SoundLoader$SoundParameter",
+  		"com.badlogic.gdx.graphics.g2d.BitmapFont": "com.badlogic.gdx.assets.loaders.BitmapFontLoader$BitmapFontParameter",
+  		"com.badlogic.gdx.graphics.Texture": "com.badlogic.gdx.assets.loaders.TextureLoader$TextureParameter",
+  		"com.badlogic.gdx.maps.tiled.TiledMap": "com.badlogic.gdx.maps.tiled.TmxMapLoader$Parameters",
+  		"com.badlogic.gdx.graphics.g2d.ParticleEffect": "com.badlogic.gdx.assets.loaders.ParticleEffectLoader$ParticleEffectParameter",
+  		"com.badlogic.gdx.graphics.g2d.TextureAtlas": "com.badlogic.gdx.assets.loaders.TextureAtlasLoader$TextureAtlasParameter",
+  		"com.badlogic.gdx.scenes.scene2d.ui.Skin": "com.badlogic.gdx.assets.loaders.SkinLoader$SkinParameter",
+  		"com.badlogic.gdx.graphics.Pixmap": "com.badlogic.gdx.assets.loaders.PixmapLoader$PixmapParameter",
+  		"com.badlogic.gdx.audio.Music": "com.badlogic.gdx.assets.loaders.MusicLoader$MusicParameter"
+	},
+	"GameWidth":1600,
+	"GameHeight":900,
+	"FrameWidth":1600,
+	"FrameHeight":900,
+	"SpriteBatchSize":1024,
+	"SpriteCacheSize":0,
+	"ShapeRendererSize":0,
+	"UseFrame":true,
+	"FrameKeepAspect":true,
+	"AudioEnable":true,
+	"MusicVolume":1,
+	"SoundVolume":1
+}

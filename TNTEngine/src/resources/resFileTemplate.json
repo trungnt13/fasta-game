@@ -1,0 +1,261 @@
+{
+  "DefParams": [
+    {
+      "Type": "Texture",
+      "Params": {
+        "genMipMaps": false,
+        "minFilter": "Nearest",
+        "magFilter": "Nearest",
+        "wrapU": "ClampToEdge",
+        "wrapV": "ClampToEdge"
+      }
+    },
+    {
+      "Type": "TextureAtlas",
+      "Params": {
+        "flip": false
+      }
+    },
+    {
+      "Type": "BitmapFont",
+      "Params": {
+        "flip": false,
+        "minFilter": "Nearest",
+        "magFilter": "Nearest"
+      }
+    },
+    {
+      "Type": "TiledMap",
+      "Params": {
+        "yUp": true,
+        "generateMipMaps": false,
+        "textureMinFilter": "Nearest",
+        "textureMagFilter": "Nearest"
+      }
+    },
+    {
+      "Type": "Skin",
+      "Params": {
+        "textureAtlasPath": "data/atlasfile"
+      }
+    },
+    {
+      "Type": "ParticleEffect",
+      "Params": {}
+    }
+  ],
+  "Packs": [
+    {
+      "Screen": "FirstScreen",
+      "Priority": 10,
+      "Data": [
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Texture",
+          "Params": {
+            "genMipMaps": false,
+            "minFilter": "Nearest",
+            "magFilter": "Nearest",
+            "wrapU": "ClampToEdge",
+            "wrapV": "ClampToEdge"
+          }
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "TextureAtlas",
+          "Params": {
+            "flip": false
+          }
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "BitmapFont",
+          "Params": {
+            "flip": false,
+            "minFilter": "Nearest",
+            "magFilter": "Nearest"
+          }
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "ParticleEffect",
+          "Params": {}
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Music",
+          "Params": {}
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Sound",
+          "Params": {}
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Pixmap",
+          "Params": {}
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Skin",
+          "Params": {
+            "textureAtlasPath": "data/atlasfile"
+          }
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "TiledMap",
+          "Params": {
+            "yUp": true,
+            "generateMipMaps": false,
+            "textureMinFilter": "Nearest",
+            "textureMagFilter": "Nearest"
+          }
+        }
+      ]
+    },
+    {
+      "Screen": "SecondScreen",
+      "Priority": 4,
+      "Data": [
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Texture",
+          "Params": {
+            "genMipMaps": false,
+            "minFilter": "Nearest",
+            "magFilter": "Nearest",
+            "wrapU": "ClampToEdge",
+            "wrapV": "ClampToEdge"
+          }
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "TextureAtlas",
+          "Params": {
+            "flip": false
+          }
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "BitmapFont",
+          "Params": {
+            "flip": false,
+            "minFilter": "Nearest",
+            "magFilter": "Nearest"
+          }
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "ParticleEffect",
+          "Params": {}
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Music",
+          "Params": {}
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Sound",
+          "Params": {}
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Pixmap",
+          "Params": {}
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "Skin",
+          "Params": {
+            "textureAtlasPath": "data/atlasfile"
+          }
+        },
+        {
+          "File": [
+            "data/filePath1",
+            "data/filePath2",
+            "data/filePath3"
+          ],
+          "Type": "TiledMap",
+          "Params": {
+            "yUp": true,
+            "generateMipMaps": false,
+            "textureMinFilter": "Nearest",
+            "textureMagFilter": "Nearest"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+	"OpenGL20": true,
+	"Accelerometer":true,
+	"Compass":true,
+	"Wakelock":true,
+	"Screen":[
+		"test.screen.SpriteSpineTestScreen",
+		"test.screen.SpriterTestScreen",
+		"test.screen.SpriteBoxTestScreen",
+		"test.screen.SpriteParticleScreen"
+	],
+	"Core":"test.core.TestCore",
+	"FirstScreen":"test.screen.SpriteSpineTestScreen",
+	"Resources":[
+		"data/resource.json"
+	],
+	"GameWidth":1280,
+	"GameHeight":720,
+	"FrameWidth":600,
+	"FrameHeight":600,
+	"SpriteBatchSize":1024,
+	"SpriteCacheSize":1024,
+	"ShapeRendererSize":1024,
+	"UseFrame":true,
+	"FrameKeepAspect":true,
+	"AudioEnable":true,
+	"MusicVolume":1,
+	"SoundVolume":1
+}
