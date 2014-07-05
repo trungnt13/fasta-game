@@ -1,0 +1,27 @@
+{
+	"OpenGL20": true,
+	"UseLua":true,
+	"Admob":"a153072802219cd",
+	"AdmobPos":"topleft",
+	"AdmobSize":"banner",
+	"Screen":[
+		"com.topvn.fappybird.TrungAnhScreen"
+	],
+	"Core":"com.topvn.fappybird.FAPpyBirdCore",
+	"FirstScreen":"com.topvn.fappybird.TrungAnhScreen",
+	"Resources":[
+		"data/resources.json"
+	],
+	"GameWidth":720,
+	"GameHeight":1280,
+	"FrameWidth":720,
+	"FrameHeight":1280,
+	"SpriteBatchSize":1024,
+	"SpriteCacheSize":0,
+	"ShapeRendererSize":0,
+	"UseFrame":true,
+	"FrameKeepAspect":true,
+	"AudioEnable":true,
+	"MusicVolume":1,
+	"SoundVolume":1
+}

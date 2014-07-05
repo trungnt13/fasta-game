@@ -1,0 +1,58 @@
+{
+  "DefParams": [
+    {
+      "Type": "Texture",
+      "Params": {
+        "genMipMaps": false,
+        "minFilter": "Nearest",
+        "magFilter": "Linear",
+        "wrapU": "ClampToEdge",
+        "wrapV": "ClampToEdge"
+      }
+    },
+    {
+      "Type": "TextureAtlas",
+      "Params": {
+        "flip": false
+      }
+    },
+    {
+      "Type": "BitmapFont",
+      "Params": {
+        "flip": false,
+        "minFilter": "Nearest",
+        "magFilter": "Linear"
+      }
+    },
+  ],
+  "Packs": [
+    {
+      "Screen": "GamePlayScreen",
+      "Priority": 10,
+      "Data": [
+        {
+          "File": [
+            "data/up.png",
+            "data/bird.png",
+            "data/down.png",
+            "data/ground.png",
+            "data/bg.png"
+          ],
+          "Type": "Texture"
+        }
+      ]
+    },
+    {
+      "Screen": "TrungAnhScreen",
+      "Priority": 10,
+      "Data": [
+        {
+          "File": [
+            "data/TrungAnh.png",
+          ],
+          "Type": "Texture"
+        }
+      ]
+    }
+  ]
+}

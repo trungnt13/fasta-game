@@ -60,7 +60,7 @@ public final class PreferencesManager {
 
 	/** This is synchronize methods
 	 * @param name use default pref name: Company Name + Game Name */
-	public TNTPreference load() {
+	public TNTPreference load () {
 		return load(Top.tgame.getCompanyName() + "." + Top.tgame.getGameName());
 	}
 
@@ -72,7 +72,7 @@ public final class PreferencesManager {
 		String oldData = pref.getString(KEY_GAME_DATA, null);
 		if (oldData == null) return new TNTPreference(pref, null);
 
-		//now decrypt data
+		// now decrypt data
 		String salt = null;
 		String data = oldData;
 
@@ -89,8 +89,8 @@ public final class PreferencesManager {
 				salt = oldData.substring(0, AndroidCrypto.SALT_LENGTH * 2);
 				data = oldData.replace(salt, "");
 			}
-		} 
-		//if user modify preference, encrypt or decrypt error, reset all data
+		}
+		// if user modify preference, encrypt or decrypt error, reset all data
 		catch (Exception e) {
 			pref.clear();
 			data = null;

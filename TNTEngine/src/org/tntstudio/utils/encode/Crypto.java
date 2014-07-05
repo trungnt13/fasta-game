@@ -1,8 +1,19 @@
 
 package org.tntstudio.utils.encode;
 
-
 public abstract class Crypto {
+	public static final int WEAK_ALGORITHM = 0;
+	public static final int STRONG_ALGORITHM = 1;
+
+	public static final String PROVIDER = "BC";
+	public static final int SALT_LENGTH = 20;
+
+	protected static final int IV_LENGTH = 16;
+	protected static final int PBE_ITERATION_COUNT = 100;
+
+	protected static final String RANDOM_ALGORITHM = "SHA1PRNG";
+	protected static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
+	protected static final String SECRET_KEY_ALGORITHM = "AES";
 
 	/** Return encrypted text from given clear text throw Exception if does not call
 	 * {@link Crypto#generatedSecretKey(String, String)} first */

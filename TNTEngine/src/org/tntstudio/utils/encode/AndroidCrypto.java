@@ -17,20 +17,26 @@ import org.tntstudio.core.Top;
 
 public class AndroidCrypto extends Crypto {
 
-	public static final String PROVIDER = "BC";
-	public static final int SALT_LENGTH = 20;
-	public static final int IV_LENGTH = 16;
-	public static final int PBE_ITERATION_COUNT = 100;
-
-	private static final String RANDOM_ALGORITHM = "SHA1PRNG";
-	private static final String HASH_ALGORITHM = "SHA-512";
-	private static final String PBE_ALGORITHM = "PBEWithSHA256And256BitAES-CBC-BC";
-	private static final String CIPHER_ALGORITHM = "AES/CBC/PKCS5Padding";
-	private static final String SECRET_KEY_ALGORITHM = "AES";
+	private int KEY_LENGTH = 128;
+	private String HASH_ALGORITHM = "SHA-256";
+	private String PBE_ALGORITHM = "PBEWithSHAAnd128BitAES-CBC-BC";
 
 	private SecretKey mBackupKey;
 
+	AndroidCrypto (int cryptoAlgorithm) {
+		if (cryptoAlgorithm == Crypto.STRONG_ALGORITHM) {
+			KEY_LENGTH = 256;
+			HASH_ALGORITHM = "SHA-512";
+			PBE_ALGORITHM = "PBEWithSHA256And256BitAES-CBC-BC";
+		} else {
+			KEY_LENGTH = 128;
+			HASH_ALGORITHM = "SHA-256";
+			PBE_ALGORITHM = "PBEWithSHA256And128BitAES-CBC-BC";
+		}
+	}
+
 	AndroidCrypto () {
+		this(Crypto.WEAK_ALGORITHM);
 	}
 
 	public String encrypt (String clearText) {
@@ -59,7 +65,6 @@ public class AndroidCrypto extends Crypto {
 
 	String encrypt (SecretKey secret, String cleartext) {
 		try {
-
 			byte[] iv = generateIv();
 
 			String ivHex = HexEncoder.toHex(iv);
@@ -73,7 +78,7 @@ public class AndroidCrypto extends Crypto {
 			return ivHex + encryptedHex;
 
 		} catch (Exception e) {
-			throw new TNTRuntimeException("Unable to encrypt", e);
+			throw new TNTRuntimeException("Unable to encrypt " + PBE_ALGORITHM, e);
 		}
 	}
 
@@ -88,14 +93,14 @@ public class AndroidCrypto extends Crypto {
 			String decrypted = new String(decryptedText, "UTF-8");
 			return decrypted;
 		} catch (Exception e) {
-			throw new TNTRuntimeException("Unable to decrypt", e);
+			throw new TNTRuntimeException("Unable to decrypt " + PBE_ALGORITHM, e);
 		}
 	}
 
 	public Crypto generatedSecretKey (String password, String salt) {
 		if (Top.tgame != null) password = generatePassword(password, Top.tgame.getGameIdentification());
 		try {
-			PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), HexEncoder.toByte(salt), PBE_ITERATION_COUNT, 256);
+			PBEKeySpec pbeKeySpec = new PBEKeySpec(password.toCharArray(), HexEncoder.toByte(salt), PBE_ITERATION_COUNT, KEY_LENGTH);
 			SecretKeyFactory factory = SecretKeyFactory.getInstance(PBE_ALGORITHM, PROVIDER);
 			SecretKey tmp = factory.generateSecret(pbeKeySpec);
 			SecretKey secret = new SecretKeySpec(tmp.getEncoded(), SECRET_KEY_ALGORITHM);

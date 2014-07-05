@@ -120,7 +120,6 @@ public abstract class GameCore implements ApplicationListener {
 	// init methods
 	// ///////////////////////////////////////////////////////////////
 
-
 	/*-------- normal config --------*/
 
 	public Runnable mGameConfigurationRunnable;
@@ -184,16 +183,15 @@ public abstract class GameCore implements ApplicationListener {
 		Top.tgame = this;
 	}
 
-	/**
-	 * set {@link Game} for this GameCore in order to involve specific platform's methods 
-	 */
-	public void setGameApplication(Game game){
+	/** set {@link Game} for this GameCore in order to involve specific platform's methods */
+	public void setGameApplication (Game game) {
 		mGameApplication = game;
 	}
-	
-	Game getGameApplication(){
+
+	Game getGameApplication () {
 		return mGameApplication;
 	}
+
 	// ///////////////////////////////////////////////////////////////
 	// ovveride methods
 	// ///////////////////////////////////////////////////////////////
