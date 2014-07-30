@@ -2,16 +2,13 @@
 package com.ict.entities;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.ict.DicteriousGame;
-import com.ict.data.GameData.Game1Data;
 import com.ict.entities.G1Brick.BrickDropListener;
 
 public class G1BrickManager extends EntitiesManager implements BrickDropListener {
-	private static final float DISTANCE = 2 * DicteriousGame.ScreenHeight / 3;
+	private static final float DISTANCE = 6 * DicteriousGame.ScreenHeight / 7;
 
 	/** For adding brick */
 	private CraftingStatusListener mStatusListener;
@@ -40,19 +37,27 @@ public class G1BrickManager extends EntitiesManager implements BrickDropListener
 				mCurrentStatus = Status.Waiting;
 				if (mStatusListener != null) mStatusListener.statusChanged(Status.Adding);
 			} else if (!isWaitingBrickDropDone) {
-				// create brick
+				// check if word cross outside screen too much
 				String keyword = mData.removeFirst();
+				Vector2 brickSize = G1Brick.getBrickSize(keyword);
+				if (mCurrentX + brickSize.x - DicteriousGame.ScreenWidth > brickSize.x / 2) {
+					mCurrentY += brickSize.y;
+					mCurrentX = 0;
+				}
+
+				// create brick
 				G1Brick b = new G1Brick();
 				b.show(1, 1);
 				b.postEvent("drop", keyword, mCurrentX, mCurrentY, mSpeed, this);
 				add(b);
+
 				// update info
-				Vector2 brickSize = G1Brick.getBrickSize(keyword);
 				mCurrentX += brickSize.x;
 				if (mCurrentX > DicteriousGame.ScreenWidth) {
 					mCurrentX = 0;
 					mCurrentY += brickSize.y;
 				}
+
 				// turn on waiting for brick drop
 				isWaitingBrickDropDone = true;
 			}
@@ -60,6 +65,7 @@ public class G1BrickManager extends EntitiesManager implements BrickDropListener
 
 		} else if (mCurrentStatus == Status.Waiting && mStatusList.size() > 0) {
 			mCurrentStatus = mStatusList.removeFirst();
+			if (mStatusListener != null) mStatusListener.statusChanged(Status.Waiting);
 		}
 	}
 
@@ -69,7 +75,7 @@ public class G1BrickManager extends EntitiesManager implements BrickDropListener
 	}
 
 	/** @param params <br>
-	 *           question1_speed_questionData : post question in words per minite for given string. <br>
+	 *           question1_speed_text : post question in words per minite for given string. <br>
 	 *           break_[numberOfWords] : breaks given number of words */
 	public void postEvent (Object... params) {
 		String eventType = ((String)params[0]).toLowerCase();

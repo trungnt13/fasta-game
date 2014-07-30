@@ -85,20 +85,12 @@ public class G1Brick extends Entity {
 
 	@Override
 	/** @param params <br>
-	 *           text_trungloveanh : set text for brick. <br>
 	 *           dark : change brick to dark mode, hide text <br>
 	 *           light: change brick to light mode, show text <br>
 	 *           drop_text_startX_stopY_speed: set start position for brick */
 	public void postEvent (Object... params) {
 		String eventType = ((String)params[0]).toLowerCase();
-		if (eventType.contains("text")) {
-			mText = (String)params[1];
-			Vector2 brickSize = getBrickSize(mText);
-			mCurrentSprite.setSize(brickSize.x, brickSize.y);
-
-			mCurrentSprite = mBrickLight;
-			isShowText = true;
-		} else if (eventType.contains("dark")) {
+		if (eventType.contains("dark")) {
 			mBrickDark
 				.setBounds(mCurrentSprite.getX(), mCurrentSprite.getY(), mCurrentSprite.getWidth(), mCurrentSprite.getHeight());
 			mCurrentSprite = mBrickDark;

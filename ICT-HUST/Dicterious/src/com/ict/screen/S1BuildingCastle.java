@@ -1,24 +1,38 @@
 
 package com.ict.screen;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.Timer;
 import com.ict.DicteriousGame;
+import com.ict.data.GameData.Game1Data;
 import com.ict.entities.EntitiesManager;
 import com.ict.entities.G1Background;
-import com.ict.entities.G1Brick;
 import com.ict.entities.G1BrickManager;
+import com.ict.entities.G1BrickManager.CraftingStatusListener;
+import com.ict.entities.G1BrickManager.Status;
 
-public class S1BuildingCastle implements Screen {
+public class S1BuildingCastle extends ScreenAdapter implements CraftingStatusListener {
 	private SpriteBatch batch;
 	private final EntitiesManager mEntitiesManager = new EntitiesManager();
 	private boolean isInit = false;
 
-	G1Brick b;
-	G1BrickManager bm;
+	private final ArrayDeque<Game1Data> mGameData = DicteriousGame.GameData.generateGame1();
+	private GameStatus mGameStatus = GameStatus.Preparing;
+	private final G1BrickManager mBrickManager = new G1BrickManager();
+
+	private int mCurrentSpeed = 130;
+	private boolean isAddingBricks = false;
+	private QuestionState mQuestionState = QuestionState.WaitForAnswer;
+
+	private boolean isGamePause = false;
 
 	@Override
 	public void show () {
@@ -37,61 +51,70 @@ public class S1BuildingCastle implements Screen {
 		mEntitiesManager.show(DicteriousGame.ScreenWidth, DicteriousGame.ScreenHeight);
 		mEntitiesManager.findEntityByName("background").postEvent("maxtime", 90f);
 
-		b = new G1Brick();
-		b.show(1, 1);
-		b.postEvent("text", "Trung Love Anh");
-		b.postEvent("drop", "TrungLoveAnh", 100f, 100f, 200f);
-		
-		bm = new G1BrickManager();
-		bm.show(1, 1);
-		bm.postEvent("add",130,"Trung Love Anh Forever And Ever!");
+		mBrickManager.show(DicteriousGame.ScreenWidth, DicteriousGame.ScreenHeight);
 	}
 
 	@Override
 	public void render (float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		mEntitiesManager.update(Gdx.graphics.getDeltaTime());
-		b.update(Gdx.graphics.getDeltaTime());
-		bm.update(Gdx.graphics.getDeltaTime());
+		// update stuff
+		if (!isGamePause) {
+			mEntitiesManager.update(delta);
+			mBrickManager.update(delta);
 
+			if (mGameStatus == GameStatus.Preparing) {
+				Timer.schedule(new Timer.Task() {
+					@Override
+					public void run () {
+						mGameStatus = GameStatus.Playing;
+						mQuestionState = QuestionState.AddSpeedAnnouncement;
+					}
+				}, 1f);
+			} else if (mGameStatus == GameStatus.Playing) {
+				if (!isAddingBricks) {
+					if (mQuestionState == QuestionState.AddSpeedAnnouncement) {
+						mBrickManager.postEvent("add", 100, mCurrentSpeed + "WPM Ready!", this);
+					} else if (mQuestionState == QuestionState.AddQuestion) {
+						mBrickManager.postEvent("add", mCurrentSpeed, mGameData.getFirst().question, this);
+						mCurrentSpeed += 10;
+					}
+					isAddingBricks = true;
+				}
+				// add question done, wait for user's answer
+				if (mQuestionState == QuestionState.WaitForAnswer) {
+
+				}
+			} else if (mGameStatus == GameStatus.Completed) {
+
+			}
+		}
+		// draw stuff
 		batch.begin();
 		mEntitiesManager.render(batch);
-		b.render(batch);
-		bm.render(batch);
+		mBrickManager.render(batch);
 		batch.end();
-
-		if (Gdx.input.justTouched()) {
-			b.postEvent("dark");
-		}
 	}
 
 	@Override
-	public void resize (int width, int height) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void hide () {
-		// TODO Auto-generated method stub
-
+	public void statusChanged (Status oldStatus) {
+		isAddingBricks = false;
+		if (mQuestionState == QuestionState.AddSpeedAnnouncement)
+			mQuestionState = QuestionState.AddQuestion;
+		else if (mQuestionState == QuestionState.AddQuestion) mQuestionState = QuestionState.WaitForAnswer;
 	}
 
 	@Override
 	public void pause () {
-		// TODO Auto-generated method stub
-
+		isGamePause = true;
 	}
 
 	@Override
 	public void resume () {
-		// TODO Auto-generated method stub
-
+		isGamePause = false;
 	}
 
-	@Override
-	public void dispose () {
+	private static enum QuestionState {
+		AddSpeedAnnouncement, AddQuestion, WaitForAnswer
 	}
-
 }
