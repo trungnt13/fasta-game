@@ -1,8 +1,6 @@
 
 package com.ict;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,7 +33,6 @@ public class DicteriousGame extends Game {
 		// load game data
 		Gson gson = new Gson();
 		GameData = new GameCreator(gson.fromJson(Gdx.files.internal("data.json").readString(), GameData.class));
-		ArrayList tmp = GameData.generateGame1();
 
 		// load font
 		FreeTypeFontGenerator FontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("brandonfont.ttf"));

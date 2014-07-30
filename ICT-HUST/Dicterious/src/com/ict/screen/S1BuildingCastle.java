@@ -10,6 +10,7 @@ import com.ict.DicteriousGame;
 import com.ict.entities.EntitiesManager;
 import com.ict.entities.G1Background;
 import com.ict.entities.G1Brick;
+import com.ict.entities.G1BrickManager;
 
 public class S1BuildingCastle implements Screen {
 	private SpriteBatch batch;
@@ -17,6 +18,7 @@ public class S1BuildingCastle implements Screen {
 	private boolean isInit = false;
 
 	G1Brick b;
+	G1BrickManager bm;
 
 	@Override
 	public void show () {
@@ -33,12 +35,16 @@ public class S1BuildingCastle implements Screen {
 
 		}
 		mEntitiesManager.show(DicteriousGame.ScreenWidth, DicteriousGame.ScreenHeight);
-		mEntitiesManager.findEntityByName("background").postEvent("maxtime_90");
+		mEntitiesManager.findEntityByName("background").postEvent("maxtime", 90f);
 
 		b = new G1Brick();
 		b.show(1, 1);
-		b.postEvent("text_Trung Love Anh");
-		b.postEvent("position_100_100");
+		b.postEvent("text", "Trung Love Anh");
+		b.postEvent("drop", "TrungLoveAnh", 100f, 100f, 200f);
+		
+		bm = new G1BrickManager();
+		bm.show(1, 1);
+		bm.postEvent("add",130,"Trung Love Anh Forever And Ever!");
 	}
 
 	@Override
@@ -46,13 +52,16 @@ public class S1BuildingCastle implements Screen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
 		mEntitiesManager.update(Gdx.graphics.getDeltaTime());
+		b.update(Gdx.graphics.getDeltaTime());
+		bm.update(Gdx.graphics.getDeltaTime());
 
 		batch.begin();
 		mEntitiesManager.render(batch);
 		b.render(batch);
+		bm.render(batch);
 		batch.end();
-		
-		if(Gdx.input.justTouched()){
+
+		if (Gdx.input.justTouched()) {
 			b.postEvent("dark");
 		}
 	}

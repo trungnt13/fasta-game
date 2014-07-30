@@ -1,6 +1,7 @@
 
 package com.ict.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.ict.DicteriousGame;
@@ -42,16 +43,16 @@ public class G1Background extends Entity {
 		}
 	}
 
-	/** @param event <br>
+	/** @param params <br>
 	 *           maxtime_89 : set max time translating the sky in seconds. <br>
 	 *           reset : reset all information bring light sky */
-	public void postEvent (String event) {
-		event = event.toLowerCase();
-		if (event.contains("maxtime") && mSky != null) {
-			float maxtime = Float.parseFloat(event.split("_")[1]);
+	public void postEvent (Object... params) {
+		String eventType = ((String)params[0]).toLowerCase();
+		if (eventType.contains("maxtime") && mSky != null) {
+			float maxtime = (Float)params[1];
 			float distance = mSky.getHeight() - DicteriousGame.ScreenHeight;
 			ySpeed = distance / maxtime;
-		} else if (event.contains("reset")) {
+		} else if (eventType.contains("reset")) {
 			ySpeed = 0;
 			yPosition = 0;
 			isSwitchLand = false;

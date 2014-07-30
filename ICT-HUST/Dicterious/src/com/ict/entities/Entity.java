@@ -14,7 +14,7 @@ public abstract class Entity {
 
 	public abstract void update (float delta);
 
-	public abstract void postEvent (String event);
+	public abstract void postEvent (Object... params);
 
 	// ///////////////////////////////////////////////////////////////
 	// Main stuff

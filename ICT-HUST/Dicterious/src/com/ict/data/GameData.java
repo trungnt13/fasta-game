@@ -17,6 +17,13 @@ public class GameData {
 			public String question;
 			public String answer;
 		}
+
+		@Override
+		public String toString () {
+			String tmp = reading + " : ";
+			tmp += "\n" + question.question + " - " + question.answer + "\n";
+			return tmp;
+		}
 	}
 
 	public static final class Game3Data {

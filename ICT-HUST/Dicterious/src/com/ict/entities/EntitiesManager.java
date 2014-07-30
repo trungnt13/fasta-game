@@ -80,7 +80,7 @@ public class EntitiesManager extends Entity implements Entity.PriorityChangeList
 	}
 
 	@Override
-	public void postEvent (String event) {
+	public void postEvent (Object...objects) {
 
 	}
 }

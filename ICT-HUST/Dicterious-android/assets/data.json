@@ -35,7 +35,7 @@
             "question": "Vitamins to help people study are illegal.",
             "answer": "F"
         }
-    }, ],
+    } ],
 
     "DataGame3": [{
         "sentence": ["She's", "intellectually", "smarter than him."],
@@ -55,7 +55,7 @@
     }, {
         "sentence": ["The tower has been, ", "totally ", "devastated."],
         "error": 2
-    }, ],
+    } ],
 
     "DataGame4": [{
         "sentence": ["Many companies have tried different methods to ", "advert ", "their products, such as making ", "advertise"],
