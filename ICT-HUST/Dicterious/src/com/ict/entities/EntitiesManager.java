@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 public class EntitiesManager extends Entity implements Entity.PriorityChangeListener {
 
 	final ArrayList<Entity> mEntitiesList = new ArrayList<Entity>();
+	private final ArrayList<Entity> mTmpList = new ArrayList<Entity>();
+	
 	private static final Comparator<Entity> EntityComparator = new Comparator<Entity>() {
 		@Override
 		public int compare (Entity o1, Entity o2) {
@@ -52,12 +54,6 @@ public class EntitiesManager extends Entity implements Entity.PriorityChangeList
 	// entity methods
 	// ///////////////////////////////////////////////////////////////
 
-	@Override
-	public void render (Batch batch) {
-		for (Entity entity : mEntitiesList) {
-			entity.render(batch);
-		}
-	}
 
 	@Override
 	public void show (float viewWidth, float viewHeight) {
@@ -66,10 +62,21 @@ public class EntitiesManager extends Entity implements Entity.PriorityChangeList
 			entity.show(viewWidth, viewHeight);
 		}
 	}
+	
+	@Override
+	public void render (Batch batch) {
+		mTmpList.clear();
+		mTmpList.addAll(mEntitiesList);
+		for (Entity entity : mTmpList) {
+			entity.render(batch);
+		}
+	}
 
 	@Override
 	public void update (float delta) {
-		for (Entity entity : mEntitiesList) {
+		mTmpList.clear();
+		mTmpList.addAll(mEntitiesList);
+		for (Entity entity : mTmpList) {
 			entity.update(delta);
 		}
 	}

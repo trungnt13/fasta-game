@@ -203,13 +203,15 @@ public class S1BuildingCastle extends ScreenAdapter implements CraftingStatusLis
 				}
 				// show effect
 				else if (mQuestionState == QuestionState.ShowAnswerRightEffect) {
+					System.out.println("Right Answer");
 					// TODO: Play answer right effect
 					mQuestionState = QuestionState.AddSpeedAnnouncement;
 					checkWinTheGame();
 					checkLoseTheGame();
 				} else if (mQuestionState == QuestionState.ShowAnswerWrongEffect) {
+					System.out.println("Wrong Answer");
 					// TODO: Play answer wrong effect
-					mQuestionState = QuestionState.AddSpeedAnnouncement;
+					mBrickManager.postEvent("remove", 10);
 					checkWinTheGame();
 					checkLoseTheGame();
 				}
@@ -217,8 +219,10 @@ public class S1BuildingCastle extends ScreenAdapter implements CraftingStatusLis
 			/** Game is completing */
 			else if (mGameStatus == GameStatus.Completed) {
 				if (mGameResult == GameResult.Lose) {
+					System.out.println("Lose");
 					// TODO: Game Lose
 				} else if (mGameResult == GameResult.Win) {
+					System.out.println("Win");
 					// TODO: Game Win
 				}
 			}
@@ -240,8 +244,11 @@ public class S1BuildingCastle extends ScreenAdapter implements CraftingStatusLis
 
 	@Override
 	public void statusChanged (Status oldStatus) {
-		if (oldStatus != Status.Adding) return;
-		mQuestionState = QuestionState.WaitForAnswer;
+		if (oldStatus == Status.Adding) {
+			mQuestionState = QuestionState.WaitForAnswer;
+		} else if (oldStatus == Status.Removing) {
+			mQuestionState = QuestionState.AddSpeedAnnouncement;
+		}
 	}
 
 	@Override

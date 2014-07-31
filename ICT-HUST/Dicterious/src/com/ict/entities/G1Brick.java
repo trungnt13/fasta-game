@@ -3,6 +3,7 @@ package com.ict.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Interpolation;
@@ -19,6 +20,8 @@ public class G1Brick extends Entity {
 	private static final float ShowTextTime = 0.5f;
 	/** how the brick move in */
 	private static final Interpolation InterpolationType = Interpolation.linear;
+	/** falling done after 0.5s */
+	private static final float FallingSpeed = 0.5f;
 
 	private static final Vector2 Bounds = new Vector2();
 
@@ -34,18 +37,23 @@ public class G1Brick extends Entity {
 
 	private Sprite mBrickLight;
 	private Sprite mBrickDark;
-	private Sprite mCurrentSprite;
+	Sprite mCurrentSprite;
 
 	private String mText;
 
 	private boolean isShowText = true;
 	private BrickStatus mBrickStatus = BrickStatus.None;
 
+	/** Param for dropping */
 	private float mTimeWillDrop;
 	private float mStopY;
 	private float mTimeCounter = 0;
-
 	private BrickDropListener mDropListener = null;
+
+	/** Param for falling */
+	private BrickFallListener mFallListener = null;
+	private float mFallRotation = 0;
+	private float mStartFallingY = 0;
 
 	@Override
 	public void show (float viewWidth, float viewHeight) {
@@ -81,7 +89,13 @@ public class G1Brick extends Entity {
 				}, ShowTextTime);
 			}
 		} else if (mBrickStatus == BrickStatus.Fall) {
-
+			mTimeCounter += delta;
+			mCurrentSprite.setY(Interpolation.circleIn.apply(mStartFallingY, -100, Math.min(1, mTimeCounter / FallingSpeed)));
+			mCurrentSprite.setRotation(Interpolation.circleIn.apply(0, mFallRotation, Math.min(1, mTimeCounter / FallingSpeed * 2)));
+			if (mCurrentSprite.getY() + mCurrentSprite.getHeight() < 0) {
+				mBrickStatus = BrickStatus.None;
+				if (mDropListener != null) mFallListener.fallDone(this);
+			}
 		}
 	}
 
@@ -92,6 +106,7 @@ public class G1Brick extends Entity {
 	 *           drop_text_startX_stopY_speed: set start position for brick */
 	public void postEvent (Object... params) {
 		String eventType = ((String)params[0]).toLowerCase();
+		/** Dark light */
 		if (eventType.contains("dark")) {
 			mBrickDark
 				.setBounds(mCurrentSprite.getX(), mCurrentSprite.getY(), mCurrentSprite.getWidth(), mCurrentSprite.getHeight());
@@ -125,9 +140,19 @@ public class G1Brick extends Entity {
 			// set drop listener
 			if (params.length > 5) mDropListener = (BrickDropListener)params[5];
 		}
-		/** fall from curren position */
+		/** fall from current position */
 		else if (eventType.contains("fall")) {
+			mBrickStatus = BrickStatus.Fall;
+			mTimeCounter = 0;
+			if (mCurrentSprite.getX() + mCurrentSprite.getWidth() / 2 < DicteriousGame.ScreenWidth / 2)
+				mFallRotation = -60;
+			else
+				mFallRotation = 60;
 
+			mStartFallingY = mCurrentSprite.getY();
+
+			// set drop listener
+			if (params.length > 1) mFallListener = (BrickFallListener)params[1];
 		}
 	}
 
@@ -137,6 +162,10 @@ public class G1Brick extends Entity {
 
 	public static interface BrickDropListener {
 		public void dropDone (G1Brick brick);
+	}
+
+	public static interface BrickFallListener {
+		public void fallDone (G1Brick brick);
 	}
 
 	private enum BrickStatus {

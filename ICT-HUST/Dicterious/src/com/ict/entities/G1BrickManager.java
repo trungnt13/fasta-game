@@ -3,13 +3,12 @@ package com.ict.entities;
 
 import java.util.ArrayDeque;
 
-import javax.swing.DropMode;
-
 import com.badlogic.gdx.math.Vector2;
 import com.ict.DicteriousGame;
 import com.ict.entities.G1Brick.BrickDropListener;
+import com.ict.entities.G1Brick.BrickFallListener;
 
-public class G1BrickManager extends EntitiesManager implements BrickDropListener {
+public class G1BrickManager extends EntitiesManager implements BrickDropListener, BrickFallListener {
 	private static final float DISTANCE = 13 * DicteriousGame.ScreenHeight / 14;
 
 	/** For adding brick */
@@ -70,8 +69,11 @@ public class G1BrickManager extends EntitiesManager implements BrickDropListener
 				// turn on waiting for brick drop
 				isWaitingBrickDropDone = true;
 			}
-		} else if (mCurrentStatus == Status.Removing) {
-
+		} else if (mCurrentStatus == Status.Removing && mEntitiesList.size() > 0) {
+			for (int i = 0; i < Math.min(numberOfRemoveBrick, mEntitiesList.size()); i++) {
+				mEntitiesList.get(mEntitiesList.size() - 1 - i).postEvent("fall", this);
+			}
+			mCurrentStatus = Status.Waiting;
 		} else if (mCurrentStatus == Status.Waiting && mStatusList.size() > 0) {
 			mCurrentStatus = mStatusList.removeFirst();
 			if (mStatusListener != null) mStatusListener.statusChanged(Status.Waiting);
@@ -80,10 +82,23 @@ public class G1BrickManager extends EntitiesManager implements BrickDropListener
 
 	@Override
 	public void dropDone (G1Brick brick) {
-		if (mCurrentStatus == Status.Adding)
-			isWaitingBrickDropDone = false;
-		else if (mCurrentStatus == Status.Removing) {
-			remove(brick);
+		isWaitingBrickDropDone = false;
+	}
+
+	@Override
+	public void fallDone (G1Brick brick) {
+		remove(brick);
+		if (mEntitiesList.size() > 0) {
+			G1Brick lastEntities = (G1Brick)mEntitiesList.get(mEntitiesList.size() - 1);
+			mCurrentX = lastEntities.mCurrentSprite.getX() + lastEntities.mCurrentSprite.getWidth();
+			mCurrentY = lastEntities.mCurrentSprite.getY();
+		} else {
+			mCurrentX = 0;
+			mCurrentY = DicteriousGame.ScreenHeight - DISTANCE;
+		}
+		numberOfRemoveBrick--;
+		if (numberOfRemoveBrick == 0) {
+			if (mStatusListener != null) mStatusListener.statusChanged(Status.Removing);
 		}
 	}
 
