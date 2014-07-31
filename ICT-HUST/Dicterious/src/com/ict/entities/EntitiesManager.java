@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class EntitiesManager extends Entity implements Entity.PriorityChangeListener {
 
-	private final ArrayList<Entity> mEntitiesList = new ArrayList<Entity>();
+	final ArrayList<Entity> mEntitiesList = new ArrayList<Entity>();
 	private static final Comparator<Entity> EntityComparator = new Comparator<Entity>() {
 		@Override
 		public int compare (Entity o1, Entity o2) {

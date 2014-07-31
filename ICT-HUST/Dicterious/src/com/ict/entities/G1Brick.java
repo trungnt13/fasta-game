@@ -14,11 +14,11 @@ public class G1Brick extends Entity {
 	// ///////////////////////////////////////////////////////////////
 	// static
 	// ///////////////////////////////////////////////////////////////
-	private static final float DeltaPosition = 20;
+	private static final float DeltaPosition = 10;
 	/** Time text stay remain uncovered */
 	private static final float ShowTextTime = 0.5f;
 	/** how the brick move in */
-	private static final Interpolation InterpolationType = Interpolation.bounceOut;
+	private static final Interpolation InterpolationType = Interpolation.linear;
 
 	private static final Vector2 Bounds = new Vector2();
 
@@ -39,7 +39,7 @@ public class G1Brick extends Entity {
 	private String mText;
 
 	private boolean isShowText = true;
-	private boolean isInDropMode = false;
+	private BrickStatus mBrickStatus = BrickStatus.None;
 
 	private float mTimeWillDrop;
 	private float mStopY;
@@ -59,18 +59,18 @@ public class G1Brick extends Entity {
 		mCurrentSprite.draw(batch);
 		if (isShowText)
 			DicteriousGame.FontNormal.draw(batch, mText, mCurrentSprite.getX() + DeltaPosition, mCurrentSprite.getY()
-				+ mCurrentSprite.getHeight() / 2 + DeltaPosition);
+				+ mCurrentSprite.getHeight() / 2 + DeltaPosition * 2);
 	}
 
 	@Override
 	public void update (float delta) {
-		if (isInDropMode) {
+		if (mBrickStatus == BrickStatus.Drop) {
 			mTimeCounter += delta;
 			mCurrentSprite.setY(InterpolationType.apply(DicteriousGame.ScreenHeight, mStopY,
 				Math.min(1, mTimeCounter / mTimeWillDrop)));
 			// drop done
 			if (mTimeCounter / mTimeWillDrop > 1) {
-				isInDropMode = false;
+				mBrickStatus = BrickStatus.None;
 				mCurrentSprite.setY(mStopY);
 				if (mDropListener != null) mDropListener.dropDone(this);
 				Timer.schedule(new Timer.Task() {
@@ -80,6 +80,8 @@ public class G1Brick extends Entity {
 					}
 				}, ShowTextTime);
 			}
+		} else if (mBrickStatus == BrickStatus.Fall) {
+
 		}
 	}
 
@@ -101,7 +103,10 @@ public class G1Brick extends Entity {
 			mCurrentSprite = mBrickLight;
 			isShowText = true;
 			if (mText == null) mText = "";
-		} else if (eventType.contains("drop")) {
+		}
+
+		/** drop from top screen */
+		else if (eventType.contains("drop")) {
 			// brick info
 			mText = (String)params[1];
 			Vector2 brickSize = getBrickSize(mText);
@@ -114,14 +119,27 @@ public class G1Brick extends Entity {
 			mStopY = (Float)params[3];
 			mTimeWillDrop = (DicteriousGame.ScreenHeight - mStopY) / (Float)params[4];
 			mTimeCounter = 0;
-			isInDropMode = true;
+
+			mBrickStatus = BrickStatus.Drop;
 
 			// set drop listener
 			if (params.length > 5) mDropListener = (BrickDropListener)params[5];
 		}
+		/** fall from curren position */
+		else if (eventType.contains("fall")) {
+
+		}
 	}
+
+	// ///////////////////////////////////////////////////////////////
+	// helper data type
+	// ///////////////////////////////////////////////////////////////
 
 	public static interface BrickDropListener {
 		public void dropDone (G1Brick brick);
+	}
+
+	private enum BrickStatus {
+		Fall, Drop, None
 	}
 }

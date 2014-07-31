@@ -3,12 +3,14 @@ package com.ict.entities;
 
 import java.util.ArrayDeque;
 
+import javax.swing.DropMode;
+
 import com.badlogic.gdx.math.Vector2;
 import com.ict.DicteriousGame;
 import com.ict.entities.G1Brick.BrickDropListener;
 
 public class G1BrickManager extends EntitiesManager implements BrickDropListener {
-	private static final float DISTANCE = 6 * DicteriousGame.ScreenHeight / 7;
+	private static final float DISTANCE = 13 * DicteriousGame.ScreenHeight / 14;
 
 	/** For adding brick */
 	private CraftingStatusListener mStatusListener;
@@ -23,6 +25,12 @@ public class G1BrickManager extends EntitiesManager implements BrickDropListener
 
 	private Status mCurrentStatus = Status.Waiting;
 	private final ArrayDeque<Status> mStatusList = new ArrayDeque<G1BrickManager.Status>();
+
+	private float mBrickHeight = 0;
+
+	public float getWallHeight () {
+		return mCurrentY + mBrickHeight;
+	}
 
 	@Override
 	public void show (float viewWidth, float viewHeight) {
@@ -40,6 +48,7 @@ public class G1BrickManager extends EntitiesManager implements BrickDropListener
 				// check if word cross outside screen too much
 				String keyword = mData.removeFirst();
 				Vector2 brickSize = G1Brick.getBrickSize(keyword);
+				mBrickHeight = brickSize.y;
 				if (mCurrentX + brickSize.x - DicteriousGame.ScreenWidth > brickSize.x / 2) {
 					mCurrentY += brickSize.y;
 					mCurrentX = 0;
@@ -71,7 +80,11 @@ public class G1BrickManager extends EntitiesManager implements BrickDropListener
 
 	@Override
 	public void dropDone (G1Brick brick) {
-		isWaitingBrickDropDone = false;
+		if (mCurrentStatus == Status.Adding)
+			isWaitingBrickDropDone = false;
+		else if (mCurrentStatus == Status.Removing) {
+			remove(brick);
+		}
 	}
 
 	/** @param params <br>

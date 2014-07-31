@@ -3,9 +3,11 @@ package com.ict;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.ParticleEffectLoader.ParticleEffectParameter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
@@ -41,13 +43,13 @@ public class DicteriousGame extends Game {
 		param.minFilter = TextureFilter.Linear;
 		param.magFilter = TextureFilter.Linear;
 
-		param.size = 39;
+		param.size = 30;
 		FontSmall = FontGenerator.generateFont(param);
 
-		param.size = 49;
+		param.size = 40;
 		FontNormal = FontGenerator.generateFont(param);
 
-		param.size = 59;
+		param.size = 69;
 		FontBig = FontGenerator.generateFont(param);
 
 		FontGenerator.dispose();
@@ -58,6 +60,7 @@ public class DicteriousGame extends Game {
 		AssetManager.load("game1/sky.png", Texture.class);
 		AssetManager.load("game1/brick_light.png", Texture.class);
 		AssetManager.load("game1/brick_dark.png", Texture.class);
+		AssetManager.load("game1/win.p", ParticleEffect.class);
 		while (!AssetManager.update() && AssetManager.getQueuedAssets() != 0) {
 		}
 

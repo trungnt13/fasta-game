@@ -16,6 +16,11 @@ public class G1Background extends Entity {
 	private float mSkyHeight = 0;
 
 	private boolean isSwitchLand = false;
+	private boolean isTimeUp = false;
+
+	public boolean isTimeUp () {
+		return isTimeUp;
+	}
 
 	@Override
 	public void show (float viewWidth, float viewHeight) {
@@ -32,8 +37,12 @@ public class G1Background extends Entity {
 
 	@Override
 	public void update (float delta) {
-		if (yPosition + mSkyHeight < DicteriousGame.ScreenHeight)
+		// time up, sky go dark
+		if (yPosition + mSkyHeight < DicteriousGame.ScreenHeight) {
 			yPosition = -(mSkyHeight - DicteriousGame.ScreenHeight);
+			isTimeUp = true;
+		}
+		// COntinue translate sky
 		else
 			yPosition -= ySpeed * delta;
 
@@ -44,20 +53,21 @@ public class G1Background extends Entity {
 	}
 
 	/** @param params <br>
-	 *           maxtime_89 : set max time translating the sky in seconds. <br>
-	 *           reset : reset all information bring light sky */
+	 *           maxtime_89 : set max time translating the sky in seconds. <br> */
 	public void postEvent (Object... params) {
 		String eventType = ((String)params[0]).toLowerCase();
 		if (eventType.contains("maxtime") && mSky != null) {
-			float maxtime = (Float)params[1];
-			float distance = mSky.getHeight() - DicteriousGame.ScreenHeight;
-			ySpeed = distance / maxtime;
-		} else if (eventType.contains("reset")) {
+			// reset
 			ySpeed = 0;
 			yPosition = 0;
 			isSwitchLand = false;
 			mLand = DicteriousGame.AssetManager.get("game1/land_light.png", Texture.class);
 			mSky = DicteriousGame.AssetManager.get("game1/sky.png", Texture.class);
+
+			// set
+			float maxtime = (Float)params[1];
+			float distance = mSky.getHeight() - DicteriousGame.ScreenHeight;
+			ySpeed = distance / maxtime;
 		}
 	}
 }
