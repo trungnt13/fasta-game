@@ -2,16 +2,16 @@ star
 - Delay -
 active: false
 - Duration - 
-lowMin: 3000.0
-lowMax: 3000.0
+lowMin: 500.0
+lowMax: 500.0
 - Count - 
 min: 0
 max: 100
 - Emission - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 250.0
-highMax: 250.0
+highMin: 100.0
+highMax: 100.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -62,19 +62,23 @@ timeline0: 0.0
 - Scale - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 32.0
-highMax: 32.0
+highMin: 128.0
+highMax: 48.0
 relative: false
-scalingCount: 1
+scalingCount: 3
 scaling0: 1.0
-timelineCount: 1
+scaling1: 0.75510204
+scaling2: 0.2244898
+timelineCount: 3
 timeline0: 0.0
+timeline1: 0.70547944
+timeline2: 0.9931507
 - Velocity - 
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 30.0
-highMax: 200.0
+highMin: 130.0
+highMax: 600.0
 relative: false
 scalingCount: 3
 scaling0: 1.0
@@ -153,4 +157,4 @@ aligned: false
 additive: true
 behind: false
 - Image Path -
-particle-star.png
+/Users/trungnt13/MyCode/1_EngineResearchTeam/fasta-game/ICT-HUST/Dicterious-android/assets/game1/particle-star.png
