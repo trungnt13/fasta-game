@@ -7,8 +7,10 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.ict.DicteriousGame;
 import com.ict.data.I;
+import com.ict.utils.eMath;
 
 public class MapSelectScreen extends ScreenAdapter {
 
@@ -49,7 +51,11 @@ public class MapSelectScreen extends ScreenAdapter {
 
 	private InputAdapter mInput = new InputAdapter() {
 		public boolean touchUp (int screenX, int screenY, int pointer, int button) {
-			DicteriousGame.Game.setScreen(new G1BuildingCastle());
+			Vector2 projected = eMath.convertToScreenCoordiate(screenX, screenY);
+			if (projected.y < DicteriousGame.ScreenHeight / 2)
+				DicteriousGame.Game.setScreen(new G1BuildingCastle());
+			else
+				DicteriousGame.Game.setScreen(new G4DefendEnemies());
 			return false;
 		};
 	};

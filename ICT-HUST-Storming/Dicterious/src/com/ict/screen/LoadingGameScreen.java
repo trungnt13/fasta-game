@@ -107,7 +107,7 @@ public class LoadingGameScreen extends ScreenAdapter {
 
 		// loading done
 		if (DicteriousGame.AssetManager.update() && DicteriousGame.AssetManager.getProgress() >= 1) {
-//			DicteriousGame.Game.setScreen(DicteriousGame.SMainMenu);
+			DicteriousGame.Game.setScreen(DicteriousGame.SMainMenu);
 		}
 
 		DicteriousGame.Batch.begin();
