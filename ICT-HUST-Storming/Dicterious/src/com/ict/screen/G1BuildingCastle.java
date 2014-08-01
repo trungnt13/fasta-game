@@ -41,15 +41,15 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 
 	/** graphic stuff */
 	private SpriteBatch mBatch;
-	private final G1Background mBackground = new G1Background();
-	private final G1BrickManager mBrickManager = new G1BrickManager();
-	private final G1Question mQuestion = new G1Question();
 	private final EntityManager mManager = new EntityManager() {
 		@Override
 		public void postEvent (Object... params) {
 
 		}
 	};
+	private final G1Background mBackground = new G1Background();
+	private final G1BrickManager mBrickManager = new G1BrickManager();
+	private final G1Question mQuestion = new G1Question();
 
 	/** Question states */
 	private ArrayDeque<GameData1> mGameData = DicteriousGame.GameGenerator.genGame1();

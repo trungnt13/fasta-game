@@ -37,4 +37,24 @@ public class I {
 		public static final String ParticleWin = "game1/win.p";
 	}
 
+	public static final class G4 {
+		public static final String Arrow = "game4/arrow.png";
+		public static final String Background = "game4/background.png";
+
+		public static final String[] Crossbow = new String[] {"game4/crossbow_1.png", "game4/crossbow_2.png"};
+		public static final String[] EnemyRun = new String[] {"game4/enemy_run_1.png", "game4/enemy_run_2.png",
+			"game4/enemy_run_3.png", "game4/enemy_run_4.png"};
+		public static final String[] EnemyAttack = new String[] {"game4/enemy_attack_1.png", "game4/enemy_attack_2.png"};
+
+		public static final String DeadArrow = "game4/dead_arrow.png";
+
+		public static final String True = "game4/true.png";
+		public static final String False = "game4/false.png";
+
+		public static final String SkillFire = "game4/skill_fire.png";
+		public static final String SkillSingleshot = "game4/skill_singleshot.png";
+		public static final String SkillMultishot = "game4/skill_multishot.png";
+		public static final String SkillHeadshot = "game4/skill_headshot.png";
+
+	}
 }

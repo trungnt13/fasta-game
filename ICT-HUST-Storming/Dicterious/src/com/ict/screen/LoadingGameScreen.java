@@ -69,6 +69,11 @@ public class LoadingGameScreen extends ScreenAdapter {
 			DicteriousGame.AssetManager.load(I.MainMenu.MapReview, Texture.class);
 			DicteriousGame.AssetManager.load(I.MainMenu.StoriesReview, Texture.class);
 
+			ParticleEffectParameter param = new ParticleEffectParameter();
+			param.atlasFile = "explosion.pack";
+			DicteriousGame.AssetManager.load(I.ParticleExplosion, ParticleEffect.class, param);
+
+			/*-------- loading game1 --------*/
 			DicteriousGame.AssetManager.load(I.G1.BrickDark, Texture.class);
 			DicteriousGame.AssetManager.load(I.G1.BrickLight, Texture.class);
 
@@ -88,9 +93,29 @@ public class LoadingGameScreen extends ScreenAdapter {
 			DicteriousGame.AssetManager.load(I.Dash, Texture.class);
 			DicteriousGame.AssetManager.load(I.LoadingBook, Texture.class);
 
-			ParticleEffectParameter param = new ParticleEffectParameter();
-			param.atlasFile = "explosion.pack";
-			DicteriousGame.AssetManager.load(I.ParticleExplosion, ParticleEffect.class, param);
+			/*-------- loading game4 --------*/
+			DicteriousGame.AssetManager.load(I.G4.Arrow, Texture.class);
+			DicteriousGame.AssetManager.load(I.G4.Background, Texture.class);
+			DicteriousGame.AssetManager.load(I.G4.False, Texture.class);
+			DicteriousGame.AssetManager.load(I.G4.True, Texture.class);
+
+			DicteriousGame.AssetManager.load(I.G4.SkillFire, Texture.class);
+			DicteriousGame.AssetManager.load(I.G4.SkillHeadshot, Texture.class);
+			DicteriousGame.AssetManager.load(I.G4.SkillMultishot, Texture.class);
+			DicteriousGame.AssetManager.load(I.G4.SkillSingleshot, Texture.class);
+
+			DicteriousGame.AssetManager.load(I.G4.DeadArrow, Texture.class);
+
+			for (String s : I.G4.EnemyAttack) {
+				DicteriousGame.AssetManager.load(s, Texture.class);
+			}
+			for (String s : I.G4.EnemyRun) {
+				DicteriousGame.AssetManager.load(s, Texture.class);
+			}
+
+			for (String s : I.G4.Crossbow) {
+				DicteriousGame.AssetManager.load(s, Texture.class);
+			}
 
 			/** io init */
 			Gdx.input.setInputProcessor(DicteriousGame.InputMultiplexer);
