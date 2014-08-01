@@ -25,7 +25,7 @@ public class GameData {
 
 	public static class GameData4 {
 		public boolean answer;
-		public ArrayList<Integer> pharse;
-		public ArrayList<String> sentence;
+		public ArrayList<Integer> phrase;
+		public String sentence;
 	}
 }

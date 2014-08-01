@@ -94,85 +94,50 @@
     ],
     "DataGame4": [
         {
-            "sentence": [
-                "Many companies have tried different methods to ",
-                "advert ",
-                "their products, such as making ",
-                "advertise"
-            ],
+            "sentence": "Many companies have tried different methods to, advert, their products, such as making, advertise",
             "phrase": [
-                2,
-                4
+                7,
+                13
             ],
             "answer": false
         },
         {
-            "sentence": [
-                "Mommy tries to ",
-                "advise ",
-                " but we don't take any ",
-                "advice ",
-                "!!"
-            ],
+            "sentence": "Mommy tries to, advise, but we don't take any, advice!",
             "phrase": [
-                2,
-                4
+                3,
+                9
             ],
             "answer": true
         },
         {
-            "sentence": [
-                "The ",
-                "bare",
-                " is heading down the village. It walks in its",
-                " bear",
-                " feet"
-            ],
+            "sentence":"The, bare, is heading down the village. It walks in its, bear, feet",
             "phrase": [
-                2,
-                4
+                1,
+                11
             ],
             "answer": false
         },
         {
-            "sentence": [
-                "Seeing thin models",
-                " affects",
-                " young girls' self image. The ",
-                "effect",
-                " on a young girl may be self-hate. "
-            ],
+            "sentence": "Seeing thin models, affects, young girls' self image. The, effect, on a young girl may be self-hate.",
             "phrase": [
-                2,
-                4
+                3,
+                9
             ],
             "answer": true
         },
         {
-            "sentence": [
-                "Nobody knows who ",
-                "brake",
-                " the ",
-                "break",
-                "."
-            ],
+            "sentence": "Nobody knows who brake the break.",
             "phrase": [
-                2,
-                4
+                3,
+                5
             ],
             "answer": false
         },
         {
-            "sentence": [
-                "The guitarist surfs the ",
-                "chord",
-                " gracefully to make a wonderful G ",
-                "cord",
-                "."
-            ],
+            "sentence": "The guitarist surfs the, chord, gracefully to make a wonderful G, cord.",
             "phrase": [
-                2,
-                4
+                4,
+                11
             ],
             "answer": false
         }
