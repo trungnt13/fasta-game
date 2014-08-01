@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.ict.data.GameCreator;
 import com.ict.data.GameData;
 import com.ict.data.I;
+import com.ict.entities.MysteriousBook;
 import com.ict.screen.LoadingGameScreen;
 import com.ict.screen.MainMenuScreen;
 import com.ict.screen.MapSelectScreen;
@@ -55,6 +56,9 @@ public class DicteriousGame extends Game {
 
 	/** Current Game */
 	public static Game Game;
+
+	/** loading book */
+	public static MysteriousBook MyteriousBook;
 
 	// ///////////////////////////////////////////////////////////////
 	// override part

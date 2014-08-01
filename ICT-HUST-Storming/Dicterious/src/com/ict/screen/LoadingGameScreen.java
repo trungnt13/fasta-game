@@ -17,6 +17,7 @@ import com.ict.DicteriousGame;
 import com.ict.data.GameCreator;
 import com.ict.data.GameData;
 import com.ict.data.I;
+import com.ict.entities.MysteriousBook;
 
 public class LoadingGameScreen extends ScreenAdapter {
 
@@ -28,8 +29,12 @@ public class LoadingGameScreen extends ScreenAdapter {
 		/** create batch */
 		DicteriousGame.Batch = new SpriteBatch();
 		DicteriousGame.ScreenViewport.setToOrtho2D(0, 0, DicteriousGame.ScreenWidth, DicteriousGame.ScreenHeight);
+		DicteriousGame.Batch.setProjectionMatrix(DicteriousGame.ScreenViewport);
 
 		/** load data for showing progress */
+		DicteriousGame.MyteriousBook = new MysteriousBook();
+		DicteriousGame.MyteriousBook.setPosition(0, 0);
+		DicteriousGame.MyteriousBook.postEvent("show");
 	}
 
 	@Override
@@ -78,6 +83,9 @@ public class LoadingGameScreen extends ScreenAdapter {
 			DicteriousGame.AssetManager.load(I.G1.True, Texture.class);
 			DicteriousGame.AssetManager.load(I.G1.False, Texture.class);
 
+			DicteriousGame.AssetManager.load(I.Dash, Texture.class);
+			DicteriousGame.AssetManager.load(I.LoadingBook, Texture.class);
+
 			ParticleEffectParameter param = new ParticleEffectParameter();
 			param.atlasFile = "explosion.pack";
 			DicteriousGame.AssetManager.load(I.ParticleExplosion, ParticleEffect.class, param);
@@ -96,9 +104,14 @@ public class LoadingGameScreen extends ScreenAdapter {
 		}
 
 		// loading done
-		if (DicteriousGame.AssetManager.update() && DicteriousGame.AssetManager.getProgress() > 1) {
-			DicteriousGame.Game.setScreen(DicteriousGame.SMainMenu);
+		if (DicteriousGame.AssetManager.update() && DicteriousGame.AssetManager.getProgress() >= 1) {
+//			DicteriousGame.Game.setScreen(DicteriousGame.SMainMenu);
 		}
 
+		DicteriousGame.Batch.begin();
+		DicteriousGame.MyteriousBook.update(delta);
+		DicteriousGame.MyteriousBook.render(DicteriousGame.Batch);
+		DicteriousGame.Batch.end();
+		System.out.println("Progress: " + DicteriousGame.AssetManager.getProgress());
 	}
 }

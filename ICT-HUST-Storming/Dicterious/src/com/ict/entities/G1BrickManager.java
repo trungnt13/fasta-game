@@ -4,8 +4,11 @@ package com.ict.entities;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.ict.DicteriousGame;
+import com.ict.data.I;
 import com.ict.entities.G1Brick.BrickDropListener;
 import com.ict.entities.G1Brick.BrickFallListener;
 import com.ict.entities.G1Brick.BrickStatus;
@@ -18,6 +21,7 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 	private static final float DISTANCE = DicteriousGame.ScreenHeight;
 	private static final float AUTO_TRANSLATE_SPEED = 130;
 	private static final float WALL_HEIGHT_LIMIT = 400;
+	private static final float REQUIRE_WALL_HEIGHT = 1200;
 
 	// ///////////////////////////////////////////////////////////////
 	// main
@@ -41,6 +45,10 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 	/** auto adjust bricks param */
 	private float mTranslateDistance = 0;
 
+	/** for drawing dash line */
+	private Texture mDashline;
+	private float mDashlineY = REQUIRE_WALL_HEIGHT;
+
 	// ///////////////////////////////////////////////////////////////
 	// helper
 	// ///////////////////////////////////////////////////////////////
@@ -57,9 +65,14 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 		return null;
 	}
 
-	public final boolean isCrossTheWinLine(){
+	public final boolean isCrossTheWinLine () {
+		G1Brick brick = getLastNoneDropBrick();
+		if (brick != null) {
+			if (brick.mCurrentSprite.getY() > mDashlineY) return true;
+		}
 		return false;
 	}
+
 	// ///////////////////////////////////////////////////////////////
 	// override
 	// ///////////////////////////////////////////////////////////////
@@ -67,6 +80,7 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 	@Override
 	public void show () {
 		super.show();
+		mDashline = DicteriousGame.AssetManager.get(I.Dash, Texture.class);
 	}
 
 	@Override
@@ -142,12 +156,23 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 			ArrayList<Entity> tmp = safeClone();
 			float translateAmount = AUTO_TRANSLATE_SPEED * delta;
 			mTranslateDistance -= translateAmount;
+			mDashlineY -= translateAmount;
 			for (Entity entity : tmp) {
 				((G1Brick)entity).translateY(-translateAmount);
 			}
 		} else
 			mTranslateDistance = 0;
 	}
+
+	@Override
+	public void render (Batch batch) {
+		super.render(batch);
+		batch.draw(mDashline, 0, mDashlineY, mDashline.getWidth(), 5);
+	}
+
+	// ///////////////////////////////////////////////////////////////
+	// listener methods
+	// ///////////////////////////////////////////////////////////////
 
 	@Override
 	public void dropDone (G1Brick brick) {
