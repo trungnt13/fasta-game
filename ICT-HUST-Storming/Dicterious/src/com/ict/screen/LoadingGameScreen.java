@@ -4,6 +4,7 @@ package com.ict.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.loaders.ParticleEffectLoader.ParticleEffectParameter;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -39,6 +40,7 @@ public class LoadingGameScreen extends ScreenAdapter {
 
 	@Override
 	public void render (float delta) {
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		if (!isInit) {
 			isInit = true;
 			/** load fonts */
@@ -112,6 +114,5 @@ public class LoadingGameScreen extends ScreenAdapter {
 		DicteriousGame.MyteriousBook.update(delta);
 		DicteriousGame.MyteriousBook.render(DicteriousGame.Batch);
 		DicteriousGame.Batch.end();
-		System.out.println("Progress: " + DicteriousGame.AssetManager.getProgress());
 	}
 }

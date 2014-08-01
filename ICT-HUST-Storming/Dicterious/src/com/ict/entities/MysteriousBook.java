@@ -6,46 +6,80 @@ import java.util.ArrayList;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.utils.Pool;
+import com.badlogic.gdx.utils.Pool.Poolable;
 import com.ict.DicteriousGame;
 import com.ict.data.I;
+import com.ict.utils.eMath;
 
 public class MysteriousBook extends Entity {
 	// ///////////////////////////////////////////////////////////////
 	// static param
 	// ///////////////////////////////////////////////////////////////
-	private static final int MAX_SIMULTANOUS_ICONS = 3;
+	private static final int MAX_SIMULTANOUS_ICONS = 4;
+	private static final int MIN_SIMULTANOUS_ICONS = 2;
 
-	private static final float MAX_SPEED = 100;
-	private static final float MIN_SPEED = 100;
+	private static final float MAX_SPEED = 150;
+	private static final float MIN_SPEED = 90;
 
-	private static final float DECELERATE_X = 500;
-	private static final float DECELERATE_Y = 1000;
+	private static final float MIN_DECELERATE_X = 10;
+	private static final float MAX_DECELERATE_X = 20;
+
+	private static final float MIN_DECELERATE_Y = 40;
+	private static final float MAX_DECELERATE_Y = 60;
+
+	private static final float ADD_NEW_ICONS_INTERVAL = 1f;
 
 	// ///////////////////////////////////////////////////////////////
 	// main
 	// ///////////////////////////////////////////////////////////////
 
-	private Sprite mBook;
-	private Sprite[] mLoadingIcons;
+	/*-------- pool --------*/
+	private static int IconCount = 0;
+	private final Pool<LoadingIcon> mPool = new Pool<LoadingIcon>() {
+		@Override
+		protected LoadingIcon newObject () {
+			if (mLoadingIcons == null) throw new RuntimeException("Loading Icons is not inited yet");
+			LoadingIcon icon = new LoadingIcon(mLoadingIcons[IconCount++]);
+			if (IconCount >= mLoadingIcons.length) IconCount = 0;
+			return icon;
+		}
+	};
 
-	private final ArrayList<Sprite> mSprites = new ArrayList<Sprite>();
-	private final ArrayList<Sprite> mTmps = new ArrayList<Sprite>();
+	/*-------- params --------*/
+	private Sprite mBook;
+	private ParticleEmitter mOriginalEmitter;
+	private static LoadingIcon[] mLoadingIcons;
+
+	private final ArrayList<LoadingIcon> mSprites = new ArrayList<LoadingIcon>();
+	private final ArrayList<LoadingIcon> mTmps = new ArrayList<LoadingIcon>();
 
 	private boolean isShowMysteriousStuffs = false;
 
 	private float x;
 	private float y;
 
+	private float mTimerForAddIcons = 88;
+
 	public MysteriousBook () {
+		/** create book */
 		mBook = new Sprite(new Texture(Gdx.files.internal(I.LoadingBook)));
 		float hwratio = mBook.getHeight() / mBook.getWidth();
 		mBook.setSize(DicteriousGame.ScreenWidth, hwratio * DicteriousGame.ScreenWidth);
 
-		mLoadingIcons = new Sprite[I.LoadingIcons.length];
+		/** create emitter */
+		ParticleEffect effect = new ParticleEffect();
+		effect.load(Gdx.files.internal("data/loadingicons/star.p"), Gdx.files.internal("data/loadingicons/"));
+		mOriginalEmitter = effect.findEmitter("star");
+
+		/** create icons */
+		mLoadingIcons = new LoadingIcon[I.LoadingIcons.length];
 		int i = 0;
 		for (String s : I.LoadingIcons) {
-			mLoadingIcons[i++] = new Sprite(new Texture(Gdx.files.internal(s)));
+			mLoadingIcons[i++] = new LoadingIcon(new Texture(Gdx.files.internal(s)));
 		}
 	}
 
@@ -66,9 +100,10 @@ public class MysteriousBook extends Entity {
 		return mBook.getHeight();
 	}
 
-	private ArrayList<Sprite> safeClone () {
+	private ArrayList<LoadingIcon> safeClone () {
 		mTmps.clear();
 		mTmps.addAll(mSprites);
+		return mTmps;
 	}
 
 	// ///////////////////////////////////////////////////////////////
@@ -82,12 +117,31 @@ public class MysteriousBook extends Entity {
 
 	@Override
 	public void update (float delta) {
+		// check add icon interval
+		mTimerForAddIcons += delta;
+		if (mTimerForAddIcons > ADD_NEW_ICONS_INTERVAL) {
+			mTimerForAddIcons = 0;
+			int numberOfNewIcons = eMath.randInt(MIN_SIMULTANOUS_ICONS, MAX_SIMULTANOUS_ICONS);
+			for (int i = 0; i < numberOfNewIcons; i++) {
+				mSprites.add(mPool.obtain());
+			}
+		}
 
+		// update all icon
+		safeClone();
+		for (LoadingIcon sprite : mTmps)
+			sprite.update(delta);
 	}
 
 	@Override
 	public void render (Batch batch) {
 		if (!isShowMysteriousStuffs) return;
+		// render all current icons
+		safeClone();
+		for (LoadingIcon sprite : mTmps)
+			sprite.draw(batch);
+
+		// render book
 		mBook.draw(batch);
 	}
 
@@ -98,6 +152,86 @@ public class MysteriousBook extends Entity {
 			isShowMysteriousStuffs = true;
 		} else if (eventType.contains("hide")) {
 			isShowMysteriousStuffs = false;
+			// pool all sprite
+			for (LoadingIcon i : mSprites)
+				mPool.free(i);
+			mSprites.clear();
+		}
+	}
+
+	// ///////////////////////////////////////////////////////////////
+	// helper data type
+	// ///////////////////////////////////////////////////////////////
+	private static boolean isLeft = false;
+
+	private class LoadingIcon extends Sprite implements Poolable {
+		private float mSpeedX;
+		private float mSpeedY;
+
+		private float mDecelerateX;
+		private float mDecelerateY;
+
+		private ParticleEmitter mEmitter;
+
+		public LoadingIcon (Texture tex) {
+			super(tex);
+			mEmitter = new ParticleEmitter(mOriginalEmitter);
+			reset();
+		}
+
+		public LoadingIcon (Sprite sprite) {
+			super(sprite);
+			mEmitter = new ParticleEmitter(mOriginalEmitter);
+			reset();
+		}
+
+		@Override
+		public void draw (Batch batch) {
+			mEmitter.draw(batch);
+			super.draw(batch);
+		}
+
+		public void update (float delta) {
+			// outside screen
+			if (getX() + getWidth() < 0 || getX() > DicteriousGame.ScreenWidth || getY() + getHeight() < 0
+				|| getY() > DicteriousGame.ScreenHeight) {
+				mSprites.remove(this);
+				mPool.free(this);
+			}
+
+			// update
+//			setRotation(eMath.calVectorAngle(0, 0, mSpeedX, mSpeedY));
+			translate(mSpeedX * delta, mSpeedY * delta);
+			mSpeedY -= mDecelerateY * delta;
+			if (mSpeedX < 0)
+				mSpeedX += mDecelerateX * delta;
+			else
+				mSpeedX -= mDecelerateX * delta;
+
+			// update emitter
+			mEmitter.update(delta);
+			mEmitter.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
+		}
+
+		@Override
+		public void reset () {
+			float centerBook = mBook.getX() + mBook.getWidth() / 2;
+			if (isLeft)
+				setPosition(359 - eMath.Rand.nextInt(300), mBook.getY() + mBook.getHeight() / 2);
+			else
+				setPosition(361 + -eMath.Rand.nextInt(300), mBook.getY() + mBook.getHeight() / 2);
+			isLeft = !isLeft;
+
+//			mSpeedX = (float)(MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED));
+			mSpeedY = (float)(MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED));
+
+//			mDecelerateX = (float)(MIN_DECELERATE_X + Math.random() * (MAX_DECELERATE_X - MIN_DECELERATE_X));
+			mDecelerateY = (float)(MIN_DECELERATE_Y + Math.random() * (MAX_DECELERATE_Y - MIN_DECELERATE_Y));
+
+			// on left screen
+//			if (getX() + getWidth() / 2 < centerBook) {
+//				mSpeedX = -mSpeedX;
+//			}
 		}
 	}
 }
