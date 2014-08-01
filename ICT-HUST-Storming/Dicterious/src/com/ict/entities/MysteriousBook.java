@@ -19,19 +19,20 @@ public class MysteriousBook extends Entity {
 	// ///////////////////////////////////////////////////////////////
 	// static param
 	// ///////////////////////////////////////////////////////////////
-	private static final int MAX_SIMULTANOUS_ICONS = 4;
-	private static final int MIN_SIMULTANOUS_ICONS = 2;
+	private static final int MAX_SIMULTANOUS_ICONS = 3;
+	private static final int MIN_SIMULTANOUS_ICONS = 1;
 
-	private static final float MAX_SPEED = 150;
-	private static final float MIN_SPEED = 90;
-
-	private static final float MIN_DECELERATE_X = 10;
-	private static final float MAX_DECELERATE_X = 20;
+	private static final float MAX_SPEED = 130;
+	private static final float MIN_SPEED = 100;
 
 	private static final float MIN_DECELERATE_Y = 40;
 	private static final float MAX_DECELERATE_Y = 60;
 
 	private static final float ADD_NEW_ICONS_INTERVAL = 1f;
+
+	/*-------- for better random algorithm --------*/
+	private static final ArrayList<Float> POSITION = new ArrayList<Float>();
+	private static final ArrayList<Float> CURRENT_POSITION = new ArrayList<Float>();
 
 	// ///////////////////////////////////////////////////////////////
 	// main
@@ -59,12 +60,18 @@ public class MysteriousBook extends Entity {
 
 	private boolean isShowMysteriousStuffs = false;
 
-	private float x;
-	private float y;
-
 	private float mTimerForAddIcons = 88;
 
 	public MysteriousBook () {
+		/** generate position */
+		float start = 50;
+		float end = 620;
+		float delta = (end - start) / 10;
+		for (int j = 0; j <= 10; j++) {
+			POSITION.add(start + delta * j);
+		}
+		CURRENT_POSITION.addAll(POSITION);
+
 		/** create book */
 		mBook = new Sprite(new Texture(Gdx.files.internal(I.LoadingBook)));
 		float hwratio = mBook.getHeight() / mBook.getWidth();
@@ -87,8 +94,6 @@ public class MysteriousBook extends Entity {
 	// plug in control methods
 	// ///////////////////////////////////////////////////////////////
 	public void setPosition (float x, float y) {
-		this.x = x;
-		this.y = y;
 		mBook.setPosition(x, y);
 	}
 
@@ -162,8 +167,6 @@ public class MysteriousBook extends Entity {
 	// ///////////////////////////////////////////////////////////////
 	// helper data type
 	// ///////////////////////////////////////////////////////////////
-	private static boolean isLeft = false;
-
 	private class LoadingIcon extends Sprite implements Poolable {
 		private float mSpeedX;
 		private float mSpeedY;
@@ -200,7 +203,6 @@ public class MysteriousBook extends Entity {
 			}
 
 			// update
-//			setRotation(eMath.calVectorAngle(0, 0, mSpeedX, mSpeedY));
 			translate(mSpeedX * delta, mSpeedY * delta);
 			mSpeedY -= mDecelerateY * delta;
 			if (mSpeedX < 0)
@@ -215,23 +217,16 @@ public class MysteriousBook extends Entity {
 
 		@Override
 		public void reset () {
-			float centerBook = mBook.getX() + mBook.getWidth() / 2;
-			if (isLeft)
-				setPosition(359 - eMath.Rand.nextInt(300), mBook.getY() + mBook.getHeight() / 2);
-			else
-				setPosition(361 + -eMath.Rand.nextInt(300), mBook.getY() + mBook.getHeight() / 2);
-			isLeft = !isLeft;
+			if (CURRENT_POSITION.size() == 0) CURRENT_POSITION.addAll(POSITION);
 
-//			mSpeedX = (float)(MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED));
+			float x = CURRENT_POSITION.get(eMath.Rand.nextInt(CURRENT_POSITION.size()));
+			CURRENT_POSITION.remove(x);
+			setPosition(x, mBook.getY() + mBook.getHeight() / 3);
+
 			mSpeedY = (float)(MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED));
 
-//			mDecelerateX = (float)(MIN_DECELERATE_X + Math.random() * (MAX_DECELERATE_X - MIN_DECELERATE_X));
 			mDecelerateY = (float)(MIN_DECELERATE_Y + Math.random() * (MAX_DECELERATE_Y - MIN_DECELERATE_Y));
 
-			// on left screen
-//			if (getX() + getWidth() / 2 < centerBook) {
-//				mSpeedX = -mSpeedX;
-//			}
 		}
 	}
 }
