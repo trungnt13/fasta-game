@@ -8,10 +8,10 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.ict.DicteriousGame;
@@ -22,9 +22,8 @@ import com.ict.data.I;
 import com.ict.entities.EntityManager;
 import com.ict.entities.G1Background;
 import com.ict.entities.G1BrickManager;
-import com.ict.entities.G1Question;
 import com.ict.entities.G1BrickManager.BrickStatusListener;
-import com.ict.entities.G1BrickManager.Status;
+import com.ict.entities.G1Question;
 import com.ict.utils.eMath;
 
 public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListener {
@@ -32,7 +31,8 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 	// static
 	// ///////////////////////////////////////////////////////////////
 	public static final int CenterTextPadding = 40;
-	public static final float GamePlayTime = 30;
+	public static final float GamePlayTime = 90;
+	public static final int INITIAL_SPEED = 400;
 
 	// ///////////////////////////////////////////////////////////////
 	// main
@@ -53,7 +53,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 	/** Question states */
 	private ArrayDeque<GameData1> mGameData = DicteriousGame.GameGenerator.genGame1();
 	private QuestionState mQuestionState = QuestionState.None;
-	private int mCurrentSpeed = 230;
+	private int mCurrentSpeed = INITIAL_SPEED;
 
 	private String mCurrentReading;
 	private GameData1.Question mCurrentQuestion;
@@ -75,6 +75,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 
 	/** for effect */
 	private ParticleEmitter mWinEffect;
+	private ParticleEffect mExplosionEffect;
 
 	// ///////////////////////////////////////////////////////////////
 	// override methods
@@ -89,6 +90,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 		mBackground.setName("background");
 		mBrickManager.setName("brick");
 		mQuestion.setName("question");
+
 		mManager.add(mBackground);
 		mManager.add(mBrickManager);
 		mManager.add(mQuestion);
@@ -105,13 +107,22 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 
 		/** effect */
 		mWinEffect = DicteriousGame.AssetManager.get(I.G1.ParticleWin, ParticleEffect.class).findEmitter("star");
+		// fire1 fire2 light1 light2 wave peices1 peices2 spark smallSpark smallWave bigFire smallLight
+		ParticleEffect tmpEffect = DicteriousGame.AssetManager.get(I.ParticleExplosion, ParticleEffect.class);
+		mExplosionEffect = new ParticleEffect();
+		mExplosionEffect.getEmitters().add(tmpEffect.findEmitter("fire1"));
+		mExplosionEffect.getEmitters().add(tmpEffect.findEmitter("light1"));
+		mExplosionEffect.getEmitters().add(tmpEffect.findEmitter("wave"));
+		mExplosionEffect.getEmitters().add(tmpEffect.findEmitter("bigFire"));
+		mExplosionEffect.scaleEffect(3f);
 
 		/*-------- reset everything --------*/
-		mCurrentSpeed = 230;
+		mCurrentSpeed = INITIAL_SPEED;
 		mQuestionState = QuestionState.None;
 		mResult = GameResult.None;
 		isGamePaused = false;
 		mStatus = GameStatus.Preparing;
+
 	}
 
 	@Override
@@ -137,6 +148,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 		if (!isGamePaused) {
 			mManager.update(delta);
 			mWinEffect.update(delta);
+			mExplosionEffect.update(delta);
 			checkGameWinLose();
 
 			// preparing game
@@ -195,7 +207,9 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 					System.out.println("Answer wrong");
 					mQuestion.postEvent("hide");
 					setCenterText("", false, false);
-					mQuestionState = QuestionState.PrintSpeed;// dont worry next loop win check win lose in advance
+					mBrickManager.postEvent("remove", mCurrentReading, this);
+					mQuestionState = QuestionState.None;
+// mQuestionState = QuestionState.PrintSpeed;// dont worry next loop win check win lose in advance
 				}
 			}
 			// game completed
@@ -230,16 +244,31 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 		}
 
 		mWinEffect.draw(mBatch);
+		mExplosionEffect.draw(mBatch);
+
 		mBatch.end();
 	}
 
+	// ///////////////////////////////////////////////////////////////
+	// brick control methods
+	// ///////////////////////////////////////////////////////////////
 	@Override
-	public void statusChanged (Status oldStatus) {
-		System.out.println("Shit over here " + oldStatus);
-		if (oldStatus == Status.Adding) {
-			setQuestion(mCurrentQuestion.question);
-			mQuestionState = QuestionState.WaitForAnswer;
-		}
+	public void removingBricksDone () {
+		System.out.println("REmove brick done");
+		mQuestionState = QuestionState.PrintSpeed;
+	}
+
+	@Override
+	public void addingBricksDone () {
+		System.out.println("Add brick Done");
+		setQuestion(mCurrentQuestion.question);
+		mQuestionState = QuestionState.WaitForAnswer;
+	}
+
+	@Override
+	public void startingRemoveBricks (float centerX, float centerY) {
+		System.out.println("Start removing: " + centerX + " " + centerY);
+		showBigExplosion(centerX, centerY);
 	}
 
 	// ///////////////////////////////////////////////////////////////
@@ -275,8 +304,13 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 		mWinEffect.start();
 	}
 
+	private void showBigExplosion (float x, float y) {
+		mExplosionEffect.setPosition(x, y);
+		mExplosionEffect.start();
+	}
+
 	private final void checkGameWinLose () {
-		if (mBackground.isTimeUp()) {
+		if (mBackground.isTimeUp() || (mGameData.size() == 0 && !mBrickManager.isCrossTheWinLine())) {
 			mStatus = GameStatus.Completed;
 			mResult = GameResult.Lose;
 		}

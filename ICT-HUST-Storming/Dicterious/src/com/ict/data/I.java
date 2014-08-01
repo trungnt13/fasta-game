@@ -2,6 +2,9 @@
 package com.ict.data;
 
 public class I {
+	/** fire1 fire2 light1 light2 wave peices1 peices2 spark smallSpark smallWave bigFire smallLight */
+	public static final String ParticleExplosion = "explosion.p";
+
 	public static final class MainMenu {
 		public static final String Background = "data/mainmenu_background.png";
 		public static final String MapReview = "data/map_review.png";

@@ -16,7 +16,7 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 	// ///////////////////////////////////////////////////////////////
 
 	private static final float DISTANCE = DicteriousGame.ScreenHeight;
-	private static final float AUTO_TRANSLATE_SPEED = 50;
+	private static final float AUTO_TRANSLATE_SPEED = 130;
 	private static final float WALL_HEIGHT_LIMIT = 400;
 
 	// ///////////////////////////////////////////////////////////////
@@ -31,7 +31,10 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 
 	/** For removing brick */
 	private int numberOfRemoveBrick = 0;
+	private float mCenterOfRemoveX = 0;
+	private float mCenterOfRemoveY = 0;
 
+	/** status */
 	private Status mCurrentStatus = Status.Waiting;
 	private final ArrayDeque<Status> mStatusList = new ArrayDeque<G1BrickManager.Status>();
 
@@ -39,9 +42,8 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 	private float mTranslateDistance = 0;
 
 	// ///////////////////////////////////////////////////////////////
-	// override
+	// helper
 	// ///////////////////////////////////////////////////////////////
-
 	private final G1Brick getLastBrick () {
 		if (mEntities.size() > 0) return (G1Brick)mEntities.get(mEntities.size() - 1);
 		return null;
@@ -55,6 +57,13 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 		return null;
 	}
 
+	public final boolean isCrossTheWinLine(){
+		return false;
+	}
+	// ///////////////////////////////////////////////////////////////
+	// override
+	// ///////////////////////////////////////////////////////////////
+
 	@Override
 	public void show () {
 		super.show();
@@ -64,10 +73,11 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 	public void update (float delta) {
 		super.update(delta);
 		/*-------- now update --------*/
+		/** adding bricks */
 		if (mCurrentStatus == Status.Adding) {
 			if (mData.size() == 0) {
 				mCurrentStatus = Status.Waiting;
-				if (mStatusListener != null) mStatusListener.statusChanged(Status.Adding);
+				if (mStatusListener != null) mStatusListener.addingBricksDone();
 			} else if (!isWaitingBrickDropDone) {
 				G1Brick lastBrick = getLastBrick();
 				float mCurrentY = 0;
@@ -101,14 +111,22 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 				// turn on waiting for brick drop
 				isWaitingBrickDropDone = true;
 			}
-		} else if (mCurrentStatus == Status.Removing && mEntities.size() > 0) {
+		}
+		/** remove bricks */
+		else if (mCurrentStatus == Status.Removing && mEntities.size() > 0) {
 			for (int i = 0; i < Math.min(numberOfRemoveBrick, mEntities.size()); i++) {
-				mEntities.get(mEntities.size() - 1 - i).postEvent("fall", this);
+				G1Brick brick = (G1Brick)mEntities.get(mEntities.size() - 1 - i);
+				mCenterOfRemoveX += brick.mCurrentSprite.getX() + brick.mCurrentSprite.getWidth() / 2;
+				mCenterOfRemoveY += brick.mCurrentSprite.getY() + brick.mCurrentSprite.getHeight() / 2;
+				brick.postEvent("fall", this);
 			}
+			if (mStatusListener != null)
+				mStatusListener.startingRemoveBricks(mCenterOfRemoveX / numberOfRemoveBrick, mCenterOfRemoveY / numberOfRemoveBrick);
 			mCurrentStatus = Status.Waiting;
-		} else if (mCurrentStatus == Status.Waiting && mStatusList.size() > 0) {
+		}
+		/** waiting */
+		else if (mCurrentStatus == Status.Waiting && mStatusList.size() > 0) {
 			mCurrentStatus = mStatusList.removeFirst();
-			if (mStatusListener != null) mStatusListener.statusChanged(Status.Waiting);
 		}
 
 		/*-------- check reach limit of wall --------*/
@@ -139,13 +157,10 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 	@Override
 	public void fallDone (G1Brick brick) {
 		remove(brick);
-		if (mEntities.size() > 0) {
-			G1Brick lastEntities = (G1Brick)mEntities.get(mEntities.size() - 1);
-		} else {
-		}
 		numberOfRemoveBrick--;
 		if (numberOfRemoveBrick == 0) {
-			if (mStatusListener != null) mStatusListener.statusChanged(Status.Removing);
+			if (mStatusListener != null) mStatusListener.removingBricksDone();
+			;
 		}
 	}
 
@@ -167,10 +182,17 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 
 			mStatusList.addLast(Status.Adding);
 		} else if (eventType.contains("remove")) {
+			// get number of remove
 			if (params[1] instanceof String)
-				numberOfRemoveBrick = ((String)params[1]).split("_").length;
+				numberOfRemoveBrick = ((String)params[1]).split(" ").length;
 			else if (params[1] instanceof Integer) numberOfRemoveBrick = (Integer)params[1];
+			System.out.println("Removing: " + numberOfRemoveBrick);
 
+			// reset information
+			mCenterOfRemoveX = 0;
+			mCenterOfRemoveY = 0;
+
+			// set status
 			mStatusList.addLast(Status.Removing);
 		}
 	}
@@ -180,7 +202,11 @@ public class G1BrickManager extends EntityManager implements BrickDropListener, 
 	// ///////////////////////////////////////////////////////////////
 
 	public static interface BrickStatusListener {
-		public void statusChanged (Status oldStatus);
+		public void removingBricksDone ();
+
+		public void addingBricksDone ();
+
+		public void startingRemoveBricks (float centerX, float centerY);
 	}
 
 	public static enum Status {
