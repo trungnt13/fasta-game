@@ -161,7 +161,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 		if (!isGamePaused) {
 			mManager.update(delta);
 			mWinEffect.update(delta);
-			mExplosionEffect.update(delta);
+			mExplosionEffect.update(delta/2);
 			// check game win or lose
 			checkGameWinLose();
 
@@ -270,6 +270,12 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 		mExplosionEffect.draw(mBatch);
 
 		mBatch.end();
+		
+		if(Gdx.input.justTouched()){
+			Vector2 tmp = eMath.convertToScreenCoordiate(Gdx.input.getX(), Gdx.input.getY());
+			mExplosionEffect.setPosition(tmp.x, tmp.y);
+			mExplosionEffect.start();
+		}
 	}
 
 	// ///////////////////////////////////////////////////////////////
