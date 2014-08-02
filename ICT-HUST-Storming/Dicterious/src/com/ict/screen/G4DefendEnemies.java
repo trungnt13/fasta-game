@@ -139,9 +139,9 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 				mStatus = GameStatus.None;
 
 				if (mResult == GameResult.Win) {
-					setCenterText("Congratulation! You Win!", true, false);
+					setCenterText("Congratulation! You Win!", true);
 				} else if (mResult == GameResult.Lose) {
-					setCenterText("Sorry! You Lose!", true, false);
+					setCenterText("Sorry! You Lose!", true);
 				}
 				Timer.schedule(new Timer.Task() {
 					@Override
@@ -161,13 +161,14 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 		DicteriousGame.FontNormal.setColor(Color.BLACK);
 		DicteriousGame.FontNormal.draw(mBatch, mNumberOfRithAnswer + "/" + mQuestion.getTotalNumberOfQuestion(), rax + 5, ray
 			+ mWhiteButton.getHeight() / 2 + 15);
-		DicteriousGame.FontNormal.setColor(Color.WHITE);
 
 		/** draw notification */
 		if (mNotificationTimeCOunter > 0) {
-			DicteriousGame.FontNormal.draw(mBatch, mCurrentNotification, DicteriousGame.ScreenWidth / 2, ray);
+			DicteriousGame.FontNormal.draw(mBatch, mCurrentNotification, DicteriousGame.ScreenWidth / 2 - mNotificationBound.width
+				/ 2, ray + mNotificationBound.height + 13);
 			mNotificationTimeCOunter -= delta;
 		}
+		DicteriousGame.FontNormal.setColor(Color.WHITE);
 
 		/** draw black */
 		if (isGameEnd) {
@@ -185,7 +186,7 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 	// ///////////////////////////////////////////////////////////////
 	// helper methods
 	// ///////////////////////////////////////////////////////////////
-	private void setCenterText (String centerText, boolean isEnbaleCenterBackground, boolean isAlightCenter) {
+	private void setCenterText (String centerText, boolean isAlightCenter) {
 		mCenterText = centerText;
 
 		// if text available
@@ -196,7 +197,7 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 			mCenterTextY = 2 * DicteriousGame.ScreenHeight / 3 + mCenterHeight;
 
 			// check is align
-			if (!isAlightCenter || isEnbaleCenterBackground)
+			if (!isAlightCenter)
 				mCenterTextX = G1BuildingCastle.CenterTextPadding;
 			else {
 				mCenterTextX = DicteriousGame.ScreenWidth / 2 - bound.width / 2;
