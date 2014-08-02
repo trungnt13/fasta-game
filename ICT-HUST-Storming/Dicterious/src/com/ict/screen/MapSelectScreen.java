@@ -54,7 +54,7 @@ public class MapSelectScreen extends ScreenAdapter {
 		mPoint2 = new Sprite(red);
 		mPoint2.setPosition(180 - mPoint2.getWidth() / 2, 705 - mPoint2.getHeight() / 2);
 
-		mPoint3 = new Sprite(red);
+		mPoint3 = new Sprite(brown);
 		mPoint3.setPosition(330 - mPoint1.getWidth() / 2, 965 - mPoint1.getHeight() / 2);
 
 		mPoint4 = new Sprite(brown);
@@ -101,6 +101,8 @@ public class MapSelectScreen extends ScreenAdapter {
 				DicteriousGame.Game.setScreen(new G1BuildingCastle());
 			} else if (mPoint4.getBoundingRectangle().contains(projected)) {
 				DicteriousGame.Game.setScreen(new G4DefendEnemies());
+			} else if (mPoint3.getBoundingRectangle().contains(projected)) {
+				DicteriousGame.Game.setScreen(new G3CraftCrossbow());
 			}
 			return false;
 		};

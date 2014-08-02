@@ -58,9 +58,13 @@ public class I {
 		public static final String ParticleWin = "game1/win.p";
 	}
 
+	public static final class G3 {
+		public static final String background = "game3/test1.png";
+	}
+
 	public static final class G4 {
 		public static final String WhiteButton = "game4/white_button.png";
-		
+
 		public static final String Arrow = "game4/arrow.png";
 		public static final String Background = "game4/background.png";
 

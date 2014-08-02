@@ -144,6 +144,8 @@ public class LoadingGameScreen extends ScreenAdapter {
 				DicteriousGame.AssetManager.load(s, Texture.class);
 			}
 
+			DicteriousGame.AssetManager.load(I.G3.background, Texture.class);
+
 			/** io init */
 			DicteriousGame.Layout = new Stage(new ScalingViewport(Scaling.stretch, DicteriousGame.ScreenWidth,
 				DicteriousGame.ScreenHeight));
