@@ -5,8 +5,11 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.ict.DicteriousGame;
 import com.ict.data.I;
 import com.ict.entities.G4Enemies.Enemy;
@@ -23,6 +26,9 @@ public class G4CrossBow extends Entity {
 	private static final float CROSSBOW_X = DicteriousGame.ScreenWidth / 2;
 	private static final float CROSSBOW_Y = DicteriousGame.ScreenHeight / 5;
 
+	private static final float SKILL_Y = 13;
+
+	private static final int MULTI_SHOT = 3;
 	// ///////////////////////////////////////////////////////////////
 	// main
 	// ///////////////////////////////////////////////////////////////
@@ -40,9 +46,58 @@ public class G4CrossBow extends Entity {
 	/*-------- reload params --------*/
 	private float mReloadTimeCounter = 0;
 
+	/*-------- skill --------*/
+	private final String[] mSkillName = new String[] {I.G4.SkillFire, I.G4.SkillMultishot, I.G4.SkillHeadshot,
+		I.G4.SkillSingleshot};
+	private final Sprite[] mSkill = new Sprite[mSkillName.length];
+	private String mCurrentSkillName;
+	private Sprite mCurrentSkill;
+	private boolean isHideSkill = false;
+
+	/*-------- particle effect --------*/
+	private ParticleEmitter mEmitter;
+
 	// ///////////////////////////////////////////////////////////////
 	// helper methods
 	// ///////////////////////////////////////////////////////////////
+
+	public void attack (ArrayList<Enemy> e) {
+		isHideSkill = true;
+		showAnswerRightEffect(mCurrentSkill.getX() + mCurrentSkill.getWidth() / 2, mCurrentSkill.getY() + mCurrentSkill.getHeight()
+			/ 2);
+		Timer.schedule(new Timer.Task() {
+			@Override
+			public void run () {
+				refreshSkill();
+			}
+		}, 1.3f);
+
+		if (mCurrentSkillName.toLowerCase().contains("fire")) {
+			for (Enemy enemy : e) {
+				if (!enemy.isDead()) shotSingle(enemy.getCenterX(), enemy.getCenterY());
+			}
+		} else if (mCurrentSkillName.toLowerCase().contains("head")) {
+			for (Enemy enemy : e) {
+				if (!enemy.isDead()) shotSingle(enemy.getCenterX(), enemy.getCenterY());
+			}
+		} else if (mCurrentSkillName.toLowerCase().contains("multi")) {
+			int count = 0;
+			for (Enemy enemy : e) {
+				if (!enemy.isDead()) {
+					shotSingle(enemy.getCenterX(), enemy.getCenterY());
+					count++;
+					if (count > MULTI_SHOT) return;
+				}
+			}
+		} else if (mCurrentSkillName.toLowerCase().contains("single")) {
+			for (Enemy enemy : e) {
+				if (!enemy.isDead()) {
+					shotSingle(enemy.getCenterX(), enemy.getCenterY());
+					return;
+				}
+			}
+		}
+	}
 
 	public void setRotation (float rotation) {
 		mCurrentCrossBow.setRotation(rotation);
@@ -54,7 +109,7 @@ public class G4CrossBow extends Entity {
 		return mTmps;
 	}
 
-	public void shotSingle (float x, float y) {
+	private void shotSingle (float x, float y) {
 		mCurrentCrossBow.setTexture(mCrossBow[1]);
 		mReloadTimeCounter = RELOAD_TIME;
 
@@ -72,6 +127,31 @@ public class G4CrossBow extends Entity {
 
 	public float getCenterY () {
 		return mCurrentCrossBow.getY() + mCurrentCrossBow.getHeight() / 2;
+	}
+
+	private void setSkill (int index) {
+		mCurrentSkillName = mSkillName[index];
+		mCurrentSkill = mSkill[index];
+	}
+
+	public void refreshSkill () {
+		isHideSkill = false;
+		int index = eMath.Rand.nextInt(13);
+
+		if (index == 0 || index == 1) {
+			setSkill(0);
+		} else if (index == 2 || index == 3 || index == 4) {
+			setSkill(1);
+		} else if (index == 5 || index == 6 || index == 7) {
+			setSkill(2);
+		} else {
+			setSkill(3);
+		}
+	}
+
+	private void showAnswerRightEffect (float x, float y) {
+		mEmitter.setPosition(x, y);
+		mEmitter.start();
 	}
 
 	// ///////////////////////////////////////////////////////////////
@@ -93,6 +173,17 @@ public class G4CrossBow extends Entity {
 
 		/** init arrow */
 		mArrow = DicteriousGame.AssetManager.get(I.G4.Arrow, Texture.class);
+
+		/** init skill */
+		for (int j = 0; j < mSkillName.length; j++) {
+			mSkill[j] = new Sprite(DicteriousGame.AssetManager.get(mSkillName[j], Texture.class));
+			mSkill[j].setPosition(DicteriousGame.ScreenWidth / 2 - mSkill[j].getWidth() / 2, SKILL_Y);
+		}
+
+		refreshSkill();
+
+		/** prepare effect */
+		mEmitter = DicteriousGame.AssetManager.get(I.G1.ParticleWin, ParticleEffect.class).findEmitter("star");
 	}
 
 	@Override
@@ -110,6 +201,9 @@ public class G4CrossBow extends Entity {
 		for (Arrow a : mTmps) {
 			a.update(delta);
 		}
+
+		/** update emitter */
+		mEmitter.update(delta);
 	}
 
 	@Override
@@ -120,6 +214,10 @@ public class G4CrossBow extends Entity {
 		for (Arrow a : mTmps) {
 			a.draw(batch);
 		}
+
+		if (!isHideSkill) mCurrentSkill.draw(batch);
+
+		mEmitter.draw(batch);
 	}
 
 	@Override

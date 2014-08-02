@@ -22,17 +22,20 @@ public class G4Enemies extends Entity {
 
 	public static final float ENEMY_ATTACK_DURATION = 0.2f;
 
-	public static final float ENEMY_MOVING_SPEED = 30;
+	public static final float ENEMY_MOVING_SPEED = 50;
 	public static final float ENEMY_MOVING_DURATION = 0.2f;
 
-	public static final int MAX_SPAWN = 3;
-	public static final int MIN_SPAWN = 1;
+	public static final int MAX_SPAWN = 5;
+	public static final int MIN_SPAWN = 3;
 	public static final float SPAWN_TIME_INTERVAL = 5f;
 
 	public static final float CASTLE_Y = DicteriousGame.ScreenHeight / 5;
 	// ///////////////////////////////////////////////////////////////
 	// main
 	// ///////////////////////////////////////////////////////////////
+	/*-------- statistic --------*/
+	private int mNumberOfDead;
+	private int mNumberOfAttack;
 
 	/*-------- manage enemy --------*/
 	private final ArrayList<Enemy> mSprites = new ArrayList<G4Enemies.Enemy>();
@@ -66,6 +69,14 @@ public class G4Enemies extends Entity {
 		return x;
 	}
 
+	public int getNumberOfDead () {
+		return mNumberOfDead;
+	}
+
+	public int getNumberOfAttack () {
+		return mNumberOfAttack;
+	}
+
 	// ///////////////////////////////////////////////////////////////
 	// override
 	// ///////////////////////////////////////////////////////////////
@@ -92,6 +103,7 @@ public class G4Enemies extends Entity {
 		}
 		mCurrentX.clear();
 		mCurrentX.addAll(mOriginalX);
+
 	}
 
 	@Override
@@ -168,6 +180,10 @@ public class G4Enemies extends Entity {
 			mDeadTimeCounter = 0;
 		}
 
+		public boolean isDead () {
+			return mState == EnemySate.Dead || mState == EnemySate.Disappear;
+		}
+
 		@Override
 		public void update (float delta) {
 			super.update(delta);
@@ -183,6 +199,7 @@ public class G4Enemies extends Entity {
 					setKeyFrames(mAttackAnimation);
 					start(ENEMY_ATTACK_DURATION, PlayMode.LOOP);
 					isInitAttack = true;
+					mNumberOfAttack++;
 				}
 			}
 			/** play dead effect */
@@ -205,6 +222,7 @@ public class G4Enemies extends Entity {
 				// done disappear
 				if (mDeadTimeCounter > 1) {
 					mState = EnemySate.None;
+					mNumberOfDead++;
 					mSprites.remove(this);
 				}
 			}

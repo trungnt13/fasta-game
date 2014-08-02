@@ -32,7 +32,9 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 	// ///////////////////////////////////////////////////////////////
 	public static final int CenterTextPadding = 40;
 	public static final float GamePlayTime = 90;
-	public static final int INITIAL_SPEED = 400;
+	public static final int INITIAL_SPEED = 150;
+	public static final int INCREASE_SPEED_AMOUNT = 30;
+
 	private static boolean isExplosionEffectScaled = false;
 
 	// ///////////////////////////////////////////////////////////////
@@ -197,7 +199,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 					mCurrentQuestion = current.question;
 
 					mBrickManager.postEvent("add", mCurrentSpeed, mCurrentReading, this);
-					mCurrentSpeed += 10;
+					mCurrentSpeed += INCREASE_SPEED_AMOUNT;
 					mQuestionState = QuestionState.None;
 				} else if (mQuestionState == QuestionState.WaitForAnswer) {
 					// nothing to do here now
