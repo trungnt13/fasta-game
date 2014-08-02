@@ -3,23 +3,12 @@ package com.ict;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.ParticleEffectLoader.ParticleEffectParameter;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.viewport.ScalingViewport;
-import com.google.gson.Gson;
 import com.ict.data.GameCreator;
-import com.ict.data.GameData;
-import com.ict.data.I;
 import com.ict.entities.MysteriousBook;
 import com.ict.screen.LoadingGameScreen;
 import com.ict.screen.MainMenuScreen;
@@ -45,7 +34,6 @@ public class DicteriousGame extends Game {
 	public static final Matrix4 ScreenViewport = new Matrix4();
 
 	/** IO constants */
-	public static final InputMultiplexer InputMultiplexer = new InputMultiplexer();
 	public static Stage Layout;
 
 	/** Screen */
@@ -68,6 +56,8 @@ public class DicteriousGame extends Game {
 	public void create () {
 		/** set curerent game */
 		Game = this;
+
+		Gdx.input.setCatchBackKey(true);
 
 		setScreen(new LoadingGameScreen());
 	}

@@ -23,6 +23,7 @@ import com.ict.entities.MysteriousBook;
 public class LoadingGameScreen extends ScreenAdapter {
 
 	private boolean isInit = false;
+	private Texture mLoadingBackground;
 
 	@Override
 	public void show () {
@@ -36,6 +37,13 @@ public class LoadingGameScreen extends ScreenAdapter {
 		DicteriousGame.MyteriousBook = new MysteriousBook();
 		DicteriousGame.MyteriousBook.setPosition(0, 0);
 		DicteriousGame.MyteriousBook.postEvent("show");
+
+		mLoadingBackground = new Texture(Gdx.files.internal(I.LoadingBackground));
+	}
+
+	@Override
+	public void hide () {
+		mLoadingBackground.dispose();
 	}
 
 	@Override
@@ -65,9 +73,22 @@ public class LoadingGameScreen extends ScreenAdapter {
 			DicteriousGame.GameGenerator = new GameCreator(gameData);
 
 			/** load graphics resources */
+			DicteriousGame.AssetManager.load(I.MainMenu.EvaluationBackground, Texture.class);
+
 			DicteriousGame.AssetManager.load(I.MainMenu.Background, Texture.class);
-			DicteriousGame.AssetManager.load(I.MainMenu.MapReview, Texture.class);
+			DicteriousGame.AssetManager.load(I.MainMenu.PlayButton, Texture.class);
+			DicteriousGame.AssetManager.load(I.MainMenu.SettingButton, Texture.class);
+			DicteriousGame.AssetManager.load(I.MainMenu.UserProfileButton, Texture.class);
+
+			DicteriousGame.AssetManager.load(I.MapScreen.BrownPlace, Texture.class);
+			DicteriousGame.AssetManager.load(I.MapScreen.Map, Texture.class);
+			DicteriousGame.AssetManager.load(I.MapScreen.RedPlace, Texture.class);
+
 			DicteriousGame.AssetManager.load(I.MainMenu.StoriesReview, Texture.class);
+			DicteriousGame.AssetManager.load(I.MainMenu.Story1, Texture.class);
+			DicteriousGame.AssetManager.load(I.MainMenu.Story2, Texture.class);
+
+			DicteriousGame.AssetManager.load(I.BackButton, Texture.class);
 
 			ParticleEffectParameter param = new ParticleEffectParameter();
 			param.atlasFile = "explosion.pack";
@@ -118,10 +139,9 @@ public class LoadingGameScreen extends ScreenAdapter {
 			}
 
 			/** io init */
-			Gdx.input.setInputProcessor(DicteriousGame.InputMultiplexer);
 			DicteriousGame.Layout = new Stage(new ScalingViewport(Scaling.stretch, DicteriousGame.ScreenWidth,
 				DicteriousGame.ScreenHeight));
-			DicteriousGame.InputMultiplexer.addProcessor(DicteriousGame.Layout);
+// DicteriousGame.InputMultiplexer.addProcessor(DicteriousGame.Layout);
 
 			/** create screen */
 			DicteriousGame.SMainMenu = new MainMenuScreen();
@@ -136,6 +156,7 @@ public class LoadingGameScreen extends ScreenAdapter {
 		}
 
 		DicteriousGame.Batch.begin();
+		DicteriousGame.Batch.draw(mLoadingBackground, 0, 0, DicteriousGame.ScreenWidth, DicteriousGame.ScreenHeight);
 		DicteriousGame.MyteriousBook.update(delta);
 		DicteriousGame.MyteriousBook.render(DicteriousGame.Batch);
 		DicteriousGame.Batch.end();

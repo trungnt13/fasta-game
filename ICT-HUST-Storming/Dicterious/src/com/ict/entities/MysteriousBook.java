@@ -22,11 +22,11 @@ public class MysteriousBook extends Entity {
 	private static final int MAX_SIMULTANOUS_ICONS = 3;
 	private static final int MIN_SIMULTANOUS_ICONS = 1;
 
-	private static final float MAX_SPEED = 130;
-	private static final float MIN_SPEED = 100;
+	private static final float MAX_SPEED = 300;
+	private static final float MIN_SPEED = 200;
 
-	private static final float MIN_DECELERATE_Y = 40;
-	private static final float MAX_DECELERATE_Y = 60;
+	private static final float MIN_DECELERATE_Y = 200;
+	private static final float MAX_DECELERATE_Y = 300;
 
 	private static final float ADD_NEW_ICONS_INTERVAL = 1f;
 
@@ -141,13 +141,14 @@ public class MysteriousBook extends Entity {
 	@Override
 	public void render (Batch batch) {
 		if (!isShowMysteriousStuffs) return;
+		// render book
+		mBook.draw(batch, 0.7f);
+
 		// render all current icons
 		safeClone();
 		for (LoadingIcon sprite : mTmps)
 			sprite.draw(batch);
 
-		// render book
-		mBook.draw(batch);
 	}
 
 	@Override
@@ -221,7 +222,7 @@ public class MysteriousBook extends Entity {
 
 			float x = CURRENT_POSITION.get(eMath.Rand.nextInt(CURRENT_POSITION.size()));
 			CURRENT_POSITION.remove(x);
-			setPosition(x, mBook.getY() + mBook.getHeight() / 3);
+			setPosition(x, mBook.getY() + mBook.getHeight() / 4);
 
 			mSpeedY = (float)(MIN_SPEED + Math.random() * (MAX_SPEED - MIN_SPEED));
 

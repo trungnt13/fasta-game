@@ -24,10 +24,13 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 	// ///////////////////////////////////////////////////////////////
 	// static
 	// ///////////////////////////////////////////////////////////////
+	public static final int MAX_HP = 1;
 
 	// ///////////////////////////////////////////////////////////////
 	// main
 	// ///////////////////////////////////////////////////////////////
+	private boolean isGameEnd = false;
+
 	/** graphic stuff */
 	private SpriteBatch mBatch;
 	private final EntityManager mManager = new EntityManager() {
@@ -101,17 +104,25 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 			mManager.update(delta);
 			CollisionChecker.checkCollision(mEnemies.safeClone(), mCrossBow.safeClone());
 
+			/** check losed */
+			if (mEnemies.getNumberOfAttack() > MAX_HP) {
+				mStatus = GameStatus.Completed;
+				mResult = GameResult.Lose;
+			}
+
+			/** game state */
 			if (mStatus == GameStatus.Preparing) {
 
 			} else if (mStatus == GameStatus.Playing) {
 
-			} else if (mStatus == GameStatus.Completed) {
+			} else if (mStatus == GameStatus.Completed && !isGameEnd) {
+				isGameEnd = true;
+				mStatus = GameStatus.None;
+
 				if (mResult == GameResult.Win) {
 					setCenterText("Congratulation! You Win!", true, false);
-					mStatus = GameStatus.None;
 				} else if (mResult == GameResult.Lose) {
-					setCenterText("Congratulation! You Lose!", true, false);
-					mStatus = GameStatus.None;
+					setCenterText("Sorry! You Lose!", true, false);
 				}
 				Timer.schedule(new Timer.Task() {
 					@Override

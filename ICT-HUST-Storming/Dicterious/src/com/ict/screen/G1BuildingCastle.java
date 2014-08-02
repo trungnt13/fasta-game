@@ -32,7 +32,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 	// ///////////////////////////////////////////////////////////////
 	public static final int CenterTextPadding = 40;
 	public static final float GamePlayTime = 90;
-	public static final int INITIAL_SPEED = 150;
+	public static final int INITIAL_SPEED = 180;
 	public static final int INCREASE_SPEED_AMOUNT = 30;
 
 	private static boolean isExplosionEffectScaled = false;
@@ -40,6 +40,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 	// ///////////////////////////////////////////////////////////////
 	// main
 	// ///////////////////////////////////////////////////////////////
+	private boolean isGameEnd = false;
 
 	/** graphic stuff */
 	private SpriteBatch mBatch;
@@ -106,7 +107,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 		mBackground.postEvent("maxtime", GamePlayTime);
 
 		/** set input */
-		DicteriousGame.InputMultiplexer.addProcessor(mInput);
+		Gdx.input.setInputProcessor(mInput);
 
 		/** effect */
 		mWinEffect = DicteriousGame.AssetManager.get(I.G1.ParticleWin, ParticleEffect.class).findEmitter("star");
@@ -133,7 +134,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 
 	@Override
 	public void hide () {
-		DicteriousGame.InputMultiplexer.removeProcessor(mInput);
+		Gdx.input.setInputProcessor(new InputAdapter());
 	}
 
 	@Override
@@ -219,7 +220,10 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 				}
 			}
 			// game completed
-			else if (mStatus == GameStatus.Completed) {
+			else if (mStatus == GameStatus.Completed && !isGameEnd) {
+				mStatus = GameStatus.None;
+				isGameEnd = true;
+
 				if (mResult == GameResult.Lose) {
 					mQuestion.postEvent("hide");
 					setCenterText("Sorry! You LOSE!", true, false);
@@ -227,6 +231,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 					mQuestion.postEvent("hide");
 					setCenterText("Congratulation! You WIN!", true, false);
 				}
+				System.out.println("Game completed!");
 				Timer.schedule(new Timer.Task() {
 					@Override
 					public void run () {
@@ -234,7 +239,6 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 						System.out.println("Back to MapSelectScreen from G1BuildingCastle");
 					}
 				}, 5f);
-				mStatus = GameStatus.None;
 			}
 		}
 

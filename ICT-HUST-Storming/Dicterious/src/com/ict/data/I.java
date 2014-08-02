@@ -7,16 +7,34 @@ public class I {
 	public static final String Dash = "data/dash.png";
 
 	public static final String LoadingBook = "data/loading_book.png";
+	public static final String LoadingBackground = "data/loading_background.png";
 
 	public static final String[] LoadingIcons = new String[] {"data/loadingicons/battle.png", "data/loadingicons/bird.png",
 		"data/loadingicons/castle.png", "data/loadingicons/cock.png", "data/loadingicons/crossbow.png",
 		"data/loadingicons/elephant.png", "data/loadingicons/enemy.png", "data/loadingicons/hungvuong.png",
 		"data/loadingicons/leaves.png"};
 
+	public static final String BackButton = "back_button.png";
+
 	public static final class MainMenu {
 		public static final String Background = "data/mainmenu_background.png";
-		public static final String MapReview = "data/map_review.png";
+		public static final String PlayButton = "data/play_button.png";
+		public static final String SettingButton = "data/setting_button.png";
+		public static final String UserProfileButton = "data/profile_button.png";
+
+
 		public static final String StoriesReview = "data/stories_selection.png";
+		public static final String Story1 = "data/story_1.png";
+		public static final String Story2 = "data/story_2.png";
+
+		public static final String EvaluationBackground = "data/evaluation_background.png";
+	}
+
+	public static final class MapScreen{
+		public static final String Map = "map/map.png";
+		public static final String BrownPlace = "map/brown_place.png";
+		public static final String RedPlace = "map/red_place.png";
+		
 	}
 
 	public static final class G1 {

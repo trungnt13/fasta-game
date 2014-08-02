@@ -22,7 +22,7 @@ public class G4Enemies extends Entity {
 
 	public static final float ENEMY_ATTACK_DURATION = 0.2f;
 
-	public static final float ENEMY_MOVING_SPEED = 50;
+	public static final float ENEMY_MOVING_SPEED = 60;
 	public static final float ENEMY_MOVING_DURATION = 0.2f;
 
 	public static final int MAX_SPAWN = 5;
