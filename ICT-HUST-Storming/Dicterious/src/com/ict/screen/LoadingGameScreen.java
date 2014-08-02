@@ -75,6 +75,10 @@ public class LoadingGameScreen extends ScreenAdapter {
 			/** load graphics resources */
 			DicteriousGame.AssetManager.load(I.MainMenu.EvaluationBackground, Texture.class);
 
+			DicteriousGame.AssetManager.load(I.About, Texture.class);
+
+			DicteriousGame.AssetManager.load(I.Black, Texture.class);
+
 			DicteriousGame.AssetManager.load(I.MainMenu.Background, Texture.class);
 			DicteriousGame.AssetManager.load(I.MainMenu.PlayButton, Texture.class);
 			DicteriousGame.AssetManager.load(I.MainMenu.SettingButton, Texture.class);
@@ -125,6 +129,8 @@ public class LoadingGameScreen extends ScreenAdapter {
 			DicteriousGame.AssetManager.load(I.G4.SkillMultishot, Texture.class);
 			DicteriousGame.AssetManager.load(I.G4.SkillSingleshot, Texture.class);
 
+			DicteriousGame.AssetManager.load(I.G4.WhiteButton, Texture.class);
+
 			DicteriousGame.AssetManager.load(I.G4.DeadArrow, Texture.class);
 
 			for (String s : I.G4.EnemyAttack) {
@@ -148,6 +154,7 @@ public class LoadingGameScreen extends ScreenAdapter {
 			DicteriousGame.SMapSelect = new MapSelectScreen();
 			DicteriousGame.SStoriesSelect = new StoriesSelectScreen();
 			DicteriousGame.SUserProfile = new UserProfileScreen();
+			DicteriousGame.SAbout = new AboutScreen();
 		}
 
 		// loading done

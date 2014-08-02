@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.ict.data.GameCreator;
 import com.ict.entities.MysteriousBook;
+import com.ict.screen.AboutScreen;
 import com.ict.screen.LoadingGameScreen;
 import com.ict.screen.MainMenuScreen;
 import com.ict.screen.MapSelectScreen;
@@ -41,6 +42,7 @@ public class DicteriousGame extends Game {
 	public static MapSelectScreen SMapSelect;
 	public static UserProfileScreen SUserProfile;
 	public static StoriesSelectScreen SStoriesSelect;
+	public static AboutScreen SAbout;
 
 	/** Current Game */
 	public static Game Game;

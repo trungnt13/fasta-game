@@ -49,9 +49,15 @@ public class G4Question extends Entity {
 
 	private AnswerListener mListener;
 
+	private int mTotalNumberOfQuestion;
+
 	// ///////////////////////////////////////////////////////////////
 	// helper
 	// ///////////////////////////////////////////////////////////////
+
+	public int getTotalNumberOfQuestion () {
+		return mTotalNumberOfQuestion;
+	}
 
 	private ArrayList<VirtualBrick> safeClone () {
 		mTmps.clear();
@@ -121,10 +127,6 @@ public class G4Question extends Entity {
 		}
 	}
 
-	private void clearBricks () {
-		mBricks.clear();
-	}
-
 	private void showData () {
 		mCurrentData = mGameData.removeFirst();
 		generateVirtualBrick(mCurrentData.sentence, mCurrentData.phrase);
@@ -136,6 +138,8 @@ public class G4Question extends Entity {
 
 	@Override
 	public void show () {
+		mTotalNumberOfQuestion = mGameData.size();
+
 		/** center text */
 		mHighlight = DicteriousGame.AssetManager.get(I.G1.Box, Texture.class);
 

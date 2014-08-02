@@ -81,12 +81,17 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 	private ParticleEmitter mWinEffect;
 	private ParticleEffect mExplosionEffect;
 
+	/** black backgorund for win lose */
+	private Texture mBlack;
+
 	// ///////////////////////////////////////////////////////////////
 	// override methods
 	// ///////////////////////////////////////////////////////////////
 
 	@Override
 	public void show () {
+		mBlack = DicteriousGame.AssetManager.get(I.Black, Texture.class);
+
 		/** init graphics */
 		mBatch = DicteriousGame.Batch;
 		mBatch.setProjectionMatrix(DicteriousGame.ScreenViewport);
@@ -223,13 +228,13 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 			else if (mStatus == GameStatus.Completed && !isGameEnd) {
 				mStatus = GameStatus.None;
 				isGameEnd = true;
-
+				Gdx.input.setInputProcessor(new InputAdapter());
 				if (mResult == GameResult.Lose) {
 					mQuestion.postEvent("hide");
-					setCenterText("Sorry! You LOSE!", true, false);
+					setCenterText("Sorry! You LOSE!", false, true);
 				} else if (mResult == GameResult.Win) {
 					mQuestion.postEvent("hide");
-					setCenterText("Congratulation! You WIN!", true, false);
+					setCenterText("Congratulation! You WIN!", false, true);
 				}
 				System.out.println("Game completed!");
 				Timer.schedule(new Timer.Task() {
@@ -245,6 +250,10 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 		/** Game render */
 		mBatch.begin();
 		mManager.render(mBatch);
+
+		if (isGameEnd) {
+			mBatch.draw(mBlack, 0, 0, DicteriousGame.ScreenWidth, DicteriousGame.ScreenHeight);
+		}
 
 		if (mCenterText.length() > 0) {
 			if (isEnbaleCenterBackground)

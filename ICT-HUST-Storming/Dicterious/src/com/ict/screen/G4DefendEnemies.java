@@ -3,10 +3,11 @@ package com.ict.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Timer;
 import com.ict.DicteriousGame;
 import com.ict.data.GameResult;
@@ -17,14 +18,15 @@ import com.ict.entities.EntityManager;
 import com.ict.entities.G4Background;
 import com.ict.entities.G4CrossBow;
 import com.ict.entities.G4Enemies;
-import com.ict.entities.G4Question.AnswerListener;
 import com.ict.entities.G4Question;
+import com.ict.entities.G4Question.AnswerListener;
 
 public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 	// ///////////////////////////////////////////////////////////////
 	// static
 	// ///////////////////////////////////////////////////////////////
 	public static final int MAX_HP = 1;
+	public static final float DURATION_OF_NOTIFICATION = 0.5f;
 
 	// ///////////////////////////////////////////////////////////////
 	// main
@@ -52,12 +54,24 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 	/** for drawing text */
 	private String mCenterText = "";
 
-	private boolean isEnbaleCenterBackground = true;
 	private float mCenterTextX;
 	private float mCenterTextY;
 	private float mCenterHeight;
 
-	private Texture mCenterBackground;
+	/** draw win lose effect */
+	private Texture mBlack;
+
+	/*-------- draw number of right answer --------*/
+	private int mNumberOfRithAnswer = 0;
+	private Texture mWhiteButton;
+
+	float rax;
+	float ray;
+
+	/** duration */
+	private String mCurrentNotification;
+	private float mNotificationTimeCOunter = 0;
+	private final TextBounds mNotificationBound = new TextBounds();
 
 	// ///////////////////////////////////////////////////////////////
 	// override screen
@@ -77,8 +91,13 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 		/** start game */
 		mQuestion.postEvent("start", this);
 
-		/** center text */
-		mCenterBackground = DicteriousGame.AssetManager.get(I.G1.Box, Texture.class);
+		/** black */
+		mBlack = DicteriousGame.AssetManager.get(I.Black, Texture.class);
+
+		/*-------- white button --------*/
+		mWhiteButton = DicteriousGame.AssetManager.get(I.G4.WhiteButton, Texture.class);
+		rax = DicteriousGame.ScreenWidth - G4CrossBow.SKILL_X - mWhiteButton.getWidth();
+		ray = G4CrossBow.SKILL_Y;
 	}
 
 	@Override
@@ -137,10 +156,25 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 		mBatch.begin();
 		mManager.render(mBatch);
 
+		/** draw right answer */
+		mBatch.draw(mWhiteButton, rax, ray);
+		DicteriousGame.FontNormal.setColor(Color.BLACK);
+		DicteriousGame.FontNormal.draw(mBatch, mNumberOfRithAnswer + "/" + mQuestion.getTotalNumberOfQuestion(), rax + 5, ray
+			+ mWhiteButton.getHeight() / 2 + 15);
+		DicteriousGame.FontNormal.setColor(Color.WHITE);
+
+		/** draw notification */
+		if (mNotificationTimeCOunter > 0) {
+			DicteriousGame.FontNormal.draw(mBatch, mCurrentNotification, DicteriousGame.ScreenWidth / 2, ray);
+			mNotificationTimeCOunter -= delta;
+		}
+
+		/** draw black */
+		if (isGameEnd) {
+			mBatch.draw(mBlack, 0, 0, DicteriousGame.ScreenWidth, DicteriousGame.ScreenHeight);
+		}
+
 		if (mCenterText.length() > 0) {
-			if (isEnbaleCenterBackground)
-				mBatch.draw(mCenterBackground, G1BuildingCastle.CenterTextPadding - 20, mCenterTextY - mCenterHeight - 20,
-					DicteriousGame.ScreenWidth - G1BuildingCastle.CenterTextPadding * 2 + 40, mCenterHeight + 40);
 			DicteriousGame.FontBig.drawWrapped(mBatch, mCenterText, mCenterTextX, mCenterTextY, DicteriousGame.ScreenWidth
 				- G1BuildingCastle.CenterTextPadding * 2);
 		}
@@ -153,7 +187,6 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 	// ///////////////////////////////////////////////////////////////
 	private void setCenterText (String centerText, boolean isEnbaleCenterBackground, boolean isAlightCenter) {
 		mCenterText = centerText;
-		this.isEnbaleCenterBackground = isEnbaleCenterBackground;
 
 		// if text available
 		if (mCenterText.length() > 0) {
@@ -179,18 +212,27 @@ public class G4DefendEnemies extends ScreenAdapter implements AnswerListener {
 	public void rightAnswer () {
 		System.out.println("Right Answer");
 		mCrossBow.attack(mEnemies.safeClone());
+		mNumberOfRithAnswer++;
+
+		mNotificationTimeCOunter = DURATION_OF_NOTIFICATION;
+		mCurrentNotification = "Correct!";
+		DicteriousGame.FontNormal.getBounds(mCurrentNotification, mNotificationBound);
 	}
 
 	@Override
 	public void wrongAnswer () {
 		System.out.println("Wrong Answer");
 		mCrossBow.refreshSkill();
+
+		mNotificationTimeCOunter = DURATION_OF_NOTIFICATION;
+		mCurrentNotification = "Wrong!";
+		DicteriousGame.FontNormal.getBounds(mCurrentNotification, mNotificationBound);
 	}
 
 	@Override
 	public void outOfQuestion () {
 		System.out.println("Out Of Question");
-		if (mEnemies.getNumberOfAttack() > 0) {
+		if (mEnemies.getNumberOfAttack() > 0 || (mNumberOfRithAnswer / mQuestion.getTotalNumberOfQuestion() < 0.5f)) {
 			mStatus = GameStatus.Completed;
 			mResult = GameResult.Lose;
 		} else {

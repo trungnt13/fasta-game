@@ -20,15 +20,16 @@ public class G4CrossBow extends Entity {
 	// ///////////////////////////////////////////////////////////////
 	// static
 	// ///////////////////////////////////////////////////////////////
-	private static final float RELOAD_TIME = 0.1f;
-	private static final float ARROW_SPEED = 2600;
+	public static final float RELOAD_TIME = 0.1f;
+	public static final float ARROW_SPEED = 2600;
 
-	private static final float CROSSBOW_X = DicteriousGame.ScreenWidth / 2;
-	private static final float CROSSBOW_Y = DicteriousGame.ScreenHeight / 5;
+	public static final float CROSSBOW_X = DicteriousGame.ScreenWidth / 2;
+	public static final float CROSSBOW_Y = DicteriousGame.ScreenHeight / 5;
 
-	private static final float SKILL_Y = 13;
+	public static final float SKILL_X = 50;
+	public static final float SKILL_Y = 13;
 
-	private static final int MULTI_SHOT = 3;
+	public static final int MULTI_SHOT = 3;
 	// ///////////////////////////////////////////////////////////////
 	// main
 	// ///////////////////////////////////////////////////////////////
@@ -177,7 +178,7 @@ public class G4CrossBow extends Entity {
 		/** init skill */
 		for (int j = 0; j < mSkillName.length; j++) {
 			mSkill[j] = new Sprite(DicteriousGame.AssetManager.get(mSkillName[j], Texture.class));
-			mSkill[j].setPosition(DicteriousGame.ScreenWidth / 2 - mSkill[j].getWidth() / 2, SKILL_Y);
+			mSkill[j].setPosition(SKILL_X, SKILL_Y);
 		}
 
 		refreshSkill();

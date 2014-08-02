@@ -81,6 +81,8 @@ public class MainMenuScreen extends ScreenAdapter {
 				DicteriousGame.Game.setScreen(DicteriousGame.SStoriesSelect);
 			} else if (mUserProfile.getBoundingRectangle().contains(projected)) {
 				DicteriousGame.Game.setScreen(DicteriousGame.SUserProfile);
+			} else if (mSetting.getBoundingRectangle().contains(projected)) {
+				DicteriousGame.Game.setScreen(DicteriousGame.SAbout);
 			}
 
 			return false;

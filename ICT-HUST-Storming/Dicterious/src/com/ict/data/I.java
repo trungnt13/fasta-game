@@ -16,12 +16,15 @@ public class I {
 
 	public static final String BackButton = "back_button.png";
 
+	public static final String About = "about.png";
+
+	public static final String Black = "black.png";
+
 	public static final class MainMenu {
 		public static final String Background = "data/mainmenu_background.png";
 		public static final String PlayButton = "data/play_button.png";
 		public static final String SettingButton = "data/setting_button.png";
 		public static final String UserProfileButton = "data/profile_button.png";
-
 
 		public static final String StoriesReview = "data/stories_selection.png";
 		public static final String Story1 = "data/story_1.png";
@@ -30,11 +33,11 @@ public class I {
 		public static final String EvaluationBackground = "data/evaluation_background.png";
 	}
 
-	public static final class MapScreen{
+	public static final class MapScreen {
 		public static final String Map = "map/map.png";
 		public static final String BrownPlace = "map/brown_place.png";
 		public static final String RedPlace = "map/red_place.png";
-		
+
 	}
 
 	public static final class G1 {
@@ -56,6 +59,8 @@ public class I {
 	}
 
 	public static final class G4 {
+		public static final String WhiteButton = "game4/white_button.png";
+		
 		public static final String Arrow = "game4/arrow.png";
 		public static final String Background = "game4/background.png";
 
