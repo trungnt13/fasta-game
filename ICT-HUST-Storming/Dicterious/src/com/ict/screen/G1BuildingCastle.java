@@ -83,6 +83,7 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 
 	/** black backgorund for win lose */
 	private Texture mBlack;
+	private boolean mLockCenterText;
 
 	// ///////////////////////////////////////////////////////////////
 	// override methods
@@ -232,9 +233,11 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 				if (mResult == GameResult.Lose) {
 					mQuestion.postEvent("hide");
 					setCenterText("Sorry! You LOSE!", false, true);
+					mLockCenterText = true;
 				} else if (mResult == GameResult.Win) {
 					mQuestion.postEvent("hide");
 					setCenterText("Congratulation! You WIN!", false, true);
+					mLockCenterText = true;
 				}
 				System.out.println("Game completed!");
 				Timer.schedule(new Timer.Task() {
@@ -295,6 +298,8 @@ public class G1BuildingCastle extends ScreenAdapter implements BrickStatusListen
 	// helper private
 	// ///////////////////////////////////////////////////////////////
 	private void setCenterText (String centerText, boolean isEnbaleCenterBackground, boolean isAlightCenter) {
+		if (mLockCenterText) return;
+
 		mCenterText = centerText;
 		this.isEnbaleCenterBackground = isEnbaleCenterBackground;
 
